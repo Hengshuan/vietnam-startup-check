@@ -1,0 +1,3076 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《打破倖存者偏差：台越青年胡志明市創業實證訪談與 AI 避雷檢測》互動式數位知識平台（V0.5 展示架構）</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '"Noto Sans TC"', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            ocean: {
+              950: '#090f1d',
+              900: '#0f172a',
+              800: '#1e3a8a',
+              700: '#1d4ed8',
+              50: '#eff6ff',
+            },
+            safe: {
+              700: '#047857',
+              600: '#059669',
+              500: '#10b981',
+              50: '#ecfdf5',
+            },
+            warn: {
+              600: '#d97706',
+              500: '#f59e0b',
+              50: '#fffbeb',
+            },
+            alert: {
+              600: '#dc2626',
+              500: '#ef4444',
+              50: '#fef2f2',
+            },
+          },
+          boxShadow: {
+            card: '0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px -6px rgba(15, 23, 42, 0.07)',
+            'card-hover': '0 4px 14px rgba(15, 23, 42, 0.08), 0 16px 32px -8px rgba(30, 58, 138, 0.12)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    /* 深海藍科技智庫 Hero 網格紋理 */
+    .hero-tech-bg {
+      background-color: #0f172a;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.65) 0%, transparent 48%),
+        radial-gradient(circle at 85% 25%, rgba(5, 150, 105, 0.24) 0%, transparent 45%),
+        radial-gradient(circle at 75% 85%, rgba(217, 119, 6, 0.16) 0%, transparent 40%),
+        linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    }
+
+    /* 分頁與卡片漸入動畫 */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 表單提示微震動 */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+    .animate-shake {
+      animation: gentleShake 0.38s ease-in-out;
+    }
+
+    /* 圓環與雷達多邊形過渡 */
+    .gauge-arc {
+      transition: stroke-dashoffset 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .radar-poly {
+      transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* 隱藏手機端橫向導覽捲動條 */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* 翻轉卡微浮起 */
+    .flip-card {
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .flip-card:hover {
+      transform: translateY(-2px);
+    }
+
+    input[type="range"] {
+      accent-color: #1e3a8a;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-blue-100 selection:text-blue-950">
+
+  <!-- ==================== 頂部黏性導覽列 (Sticky Header) ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- 頂部品牌識別與公益開源宣告列 -->
+      <div class="py-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100">
+        <button onclick="switchMainTab('overview')" class="flex items-center gap-3 text-left group focus:outline-none cursor-pointer">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-900 to-ocean-800 text-emerald-400 flex items-center justify-center shadow-sm shrink-0 group-hover:from-ocean-800 group-hover:to-ocean-700 transition-all">
+            <!-- 數據雷達與指南針圖示 -->
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9l6.36 3.64" />
+              <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-black text-sm sm:text-base lg:text-lg tracking-tight text-ocean-900 leading-snug">
+                打破倖存者偏差：台越青年胡志明市創業實證訪談與 AI 避雷檢測
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 truncate">
+              《越南創業落地體質與避雷檢測》開源互動知識平台（V0.5 展示架構）
+            </p>
+          </div>
+        </button>
+
+        <!-- 頂部公益開源徽章與版本標註 -->
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-safe-50 text-safe-700 border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-safe-600"></span>
+            100% 公益開源・非營利・零預算自主開發
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-warn-50 text-amber-800 border border-amber-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-warn-500 animate-pulse"></span>
+            V0.5 展示架構
+          </span>
+        </div>
+      </div>
+
+      <!-- 五大核心互動分頁導覽列 -->
+      <nav aria-label="五大核心功能分頁" class="py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <button data-tab="overview" onclick="switchMainTab('overview')" class="main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5">
+          <span>1. 總覽與田調架構</span>
+        </button>
+        <button data-tab="assessment" onclick="switchMainTab('assessment')" class="main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5">
+          <span>2. 3 分鐘 AI 避雷檢測</span>
+          <span class="px-1.5 py-0.5 text-[10px] rounded-md bg-emerald-100 text-safe-700 font-extrabold">核心互動</span>
+        </button>
+        <button data-tab="guide" onclick="switchMainTab('guide')" class="main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5">
+          <span>3. 數位指南 & 胡志明熱區</span>
+        </button>
+        <button data-tab="failurelab" onclick="switchMainTab('failurelab')" class="main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5">
+          <span>4. 失敗復盤 & 雙向視角</span>
+        </button>
+        <button data-tab="toolkits" onclick="switchMainTab('toolkits')" class="main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5">
+          <span>5. 互動工具附錄包</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== 主內容區塊 ==================== -->
+  <main class="flex-1 w-full">
+
+    <!-- ====================================================================== -->
+    <!-- 分頁一：總覽與田調架構 (Overview & Research Architecture)               -->
+    <!-- ====================================================================== -->
+    <section id="tab-overview" class="tab-panel animate-fade-in">
+      <!-- Hero 區塊 -->
+      <div class="hero-tech-bg text-white border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-8">
+              <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-blue-100 mb-4">
+                <span class="text-emerald-300 font-bold">#教育部青年發展署</span>
+                <span class="text-slate-400">|</span>
+                <span class="text-amber-300 font-bold">#青年百億海外圓夢基金計畫（築夢 7）</span>
+              </div>
+
+              <h1 class="text-2xl sm:text-4xl lg:text-[40px] font-black tracking-tight leading-[1.22] text-white">
+                打破倖存者偏差：<br class="hidden sm:block" />
+                <span class="text-emerald-400">台越青年胡志明市創業實證訪談</span>與 <span class="text-amber-300">AI 避雷檢測</span>
+              </h1>
+
+              <p class="mt-3 text-sm sm:text-base font-bold text-blue-200">
+                《越南創業落地體質與避雷檢測》開源互動知識平台（V0.5 展示架構）
+              </p>
+
+              <!-- 兩大核心問題意識雙欄卡片 -->
+              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="rounded-2xl bg-slate-800/75 border border-slate-700/80 p-4">
+                  <div class="flex items-center gap-2 text-xs font-extrabold text-amber-300 mb-1.5">
+                    <span class="w-5 h-5 rounded-md bg-amber-500/20 text-amber-300 flex items-center justify-center">01</span>
+                    <span>打破「倖存者偏差（Survivorship Bias）」</span>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    不寫一味歌功頌德的成功學！採<strong>「現行成功模式 × 過往失敗停損案例」</strong>雙軌實證架構，深挖受訪者曾收攤、虧損與轉型前繳過的真實學費。
+                  </p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-800/75 border border-slate-700/80 p-4">
+                  <div class="flex items-center gap-2 text-xs font-extrabold text-emerald-300 mb-1.5">
+                    <span class="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center">02</span>
+                    <span>打破「純台灣人單向視角」盲區</span>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    納入<strong>留台越南主管／創辦人級校友</strong>與<strong>台越混血新二代</strong>，透過雙向文化交叉比對，還原越南在地消費心理與商業運作真相。
+                  </p>
+                </div>
+              </div>
+
+              <!-- 行動呼籲 CTA -->
+              <div class="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <button
+                  onclick="switchMainTab('assessment')"
+                  class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-safe-600 hover:bg-safe-500 active:scale-[0.99] text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-950/40 transition-all cursor-pointer"
+                >
+                  <span>啟動 3 分鐘 AI 避雷檢測</span>
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+                <button
+                  onclick="switchMainTab('failurelab')"
+                  class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm sm:text-base transition-all cursor-pointer"
+                >
+                  <span>檢視 14 題銳利訪綱與雙向真相</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 右側計畫執行資訊摘要卡 -->
+            <div class="lg:col-span-4">
+              <div class="rounded-2xl bg-slate-900/90 backdrop-blur border border-slate-700 p-5 space-y-3 text-xs sm:text-sm">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                  <span class="text-slate-400 font-medium">主題領域</span>
+                  <span class="font-bold text-emerald-400">築夢 7・創業育成與產業交流</span>
+                </div>
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                  <span class="text-slate-400 font-medium">獨立研究者</span>
+                  <span class="font-bold text-white">黃蘅軒（生醫碩士／R・Python 數據背景）</span>
+                </div>
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                  <span class="text-slate-400 font-medium">海外田調期程</span>
+                  <span class="font-bold text-white">2027/07/15 － 10/12（90 天）</span>
+                </div>
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                  <span class="text-slate-400 font-medium">核心田調場域</span>
+                  <span class="font-bold text-white">胡志明市第 1、3、7 郡（富美興）</span>
+                </div>
+                <div class="border-b border-slate-800 pb-2.5">
+                  <span class="text-slate-400 font-medium block mb-1">在地網絡支持</span>
+                  <p class="font-bold text-white">越南胡志明市台越文化交流協會</p>
+                  <p class="text-[11px] text-slate-400 mt-0.5">創辦人 江翼 Caster（提供招募舞台與聯絡支持）</p>
+                </div>
+                <div class="rounded-xl bg-amber-500/10 border border-amber-400/30 p-3 text-[11px] text-amber-200 leading-relaxed">
+                  <strong>版本說明：</strong>目前為 <strong>V0.5 展示架構</strong>，實證數據將於海外 20 位訪談後於 <strong>V1.0–V3.0</strong> 陸續匯入。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 關鍵實證量化指標列 -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 bg-white rounded-2xl shadow-card border border-slate-200 p-4 sm:p-5">
+          <div class="p-2 text-center md:border-r border-slate-100">
+            <p class="text-2xl sm:text-3xl font-black text-ocean-800">20 <span class="text-sm font-bold text-safe-600">位</span></p>
+            <p class="text-xs font-semibold text-slate-600 mt-0.5">成功×失敗雙軌深訪</p>
+          </div>
+          <div class="p-2 text-center md:border-r border-slate-100">
+            <p class="text-2xl sm:text-3xl font-black text-ocean-800">4×3 <span class="text-sm font-bold text-safe-600">矩陣</span></p>
+            <p class="text-xs font-semibold text-slate-600 mt-0.5">四大產業×三類雙向身分</p>
+          </div>
+          <div class="p-2 text-center md:border-r border-slate-100">
+            <p class="text-2xl sm:text-3xl font-black text-ocean-800">2 <span class="text-sm font-bold text-warn-600">場</span></p>
+            <p class="text-xs font-semibold text-slate-600 mt-0.5">獨立主辦排雷焦點沙龍</p>
+          </div>
+          <div class="p-2 text-center md:border-r border-slate-100">
+            <p class="text-2xl sm:text-3xl font-black text-ocean-800">3 <span class="text-sm font-bold text-safe-600">階段</span></p>
+            <p class="text-xs font-semibold text-slate-600 mt-0.5">V1.0 → V3.0 敏捷迭代</p>
+          </div>
+          <div class="col-span-2 md:col-span-1 p-2 text-center">
+            <p class="text-2xl sm:text-3xl font-black text-ocean-800">5–10 <span class="text-sm font-bold text-warn-600">萬</span></p>
+            <p class="text-xs font-semibold text-slate-600 mt-0.5">已洽談行銷廣告精準投放</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4×3 田調受訪者矩陣探索器（支援點擊單一儲存格或整列） -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
+            <div>
+              <span class="inline-block px-2.5 py-1 rounded-lg bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-bold mb-2">
+                4×3 EMPIRICAL MATRIX EXPLORER・雙軌實證樣本矩陣
+              </span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">四大調研產業 × 三類受訪者身分互動探索器</h2>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                點擊矩陣中<strong>任一數字儲存格</strong>或<strong>左側產業名稱</strong>，即時切換檢視該細分族群的訪談聚焦重點、語言無礙篩選機制與「過往失敗停損案例」挖掘方向。
+              </p>
+            </div>
+            <span class="text-xs font-bold text-ocean-800 bg-ocean-50 border border-blue-200 px-3 py-1.5 rounded-xl shrink-0">
+              👆 點擊任意儲存格檢視細分洞察
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- 左側 4×3 互動矩陣表格 -->
+            <div class="lg:col-span-7 overflow-x-auto rounded-2xl border border-slate-200">
+              <table class="w-full text-left border-collapse min-w-[490px]">
+                <thead>
+                  <tr class="bg-ocean-900 text-white text-xs sm:text-sm">
+                    <th class="py-3.5 px-4 font-bold">調研產業領域（點擊看全產業）</th>
+                    <th class="py-3.5 px-2.5 text-center font-bold">在越台青<br /><span class="text-[10px] font-normal text-blue-200">創業者 (10)</span></th>
+                    <th class="py-3.5 px-2.5 text-center font-bold">留台越南校友<br /><span class="text-[10px] font-normal text-emerald-300">創辦人/主管 (6)</span></th>
+                    <th class="py-3.5 px-2.5 text-center font-bold">台越混血<br /><span class="text-[10px] font-normal text-amber-300">新二代創業者 (4)</span></th>
+                    <th class="py-3.5 px-3 text-center font-bold bg-slate-950">小計</th>
+                  </tr>
+                </thead>
+                <tbody id="matrix-table-body" class="divide-y divide-slate-200 text-xs sm:text-sm">
+                  <!-- JS 動態渲染 -->
+                </tbody>
+                <tfoot>
+                  <tr class="bg-slate-100 font-extrabold text-slate-900 text-xs sm:text-sm border-t-2 border-slate-300">
+                    <td class="py-3 px-4">總計（20 位雙軌實證樣本）</td>
+                    <td class="py-3 px-2.5 text-center text-ocean-800">10 位</td>
+                    <td class="py-3 px-2.5 text-center text-safe-700">6 位</td>
+                    <td class="py-3 px-2.5 text-center text-amber-700">4 位</td>
+                    <td class="py-3 px-3 text-center bg-blue-100 text-ocean-900">20 位</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- 右側動態細分族群解析面板 -->
+            <div id="matrix-detail-panel" class="lg:col-span-5 rounded-2xl bg-slate-50 border border-slate-200 p-5 space-y-4">
+              <!-- JS 動態更新 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- V0.5 → V3.0 四階段敏捷迭代開發藍圖 -->
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="mb-6">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-safe-50 text-safe-700 border border-emerald-200 text-xs font-bold mb-2">
+              AGILE DEVELOPMENT ROADMAP・邊田調、邊迭代
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">V0.5 → V3.0 四階段敏捷迭代開發藍圖</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              全面捨棄低效紙本印刷，以 R／Python 數據建模思維結合生成式 AI 免費靜態部署（零採購預算），並透過 5–10 萬元行銷廣告贊助放大網頁點擊與互動 KPI。
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="roadmap-cards">
+            <!-- JS 動態渲染 -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- 分頁二：3 分鐘 AI 避雷檢測 (Interactive 3-Min AI Pitfall Assessment)    -->
+    <!-- ====================================================================== -->
+    <section id="tab-assessment" class="tab-panel hidden animate-fade-in max-w-5xl mx-auto px-4 sm:px-6 py-8">
+
+      <!-- 步驟 1：出發前背景設定 -->
+      <div id="assess-step-0" class="space-y-6">
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-slate-100">
+            <div>
+              <span class="inline-block px-2.5 py-1 rounded-lg bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-bold mb-2">
+                STEP 1 / 3・出發前背景設定
+              </span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">《越南創業落地體質與避雷檢測》背景參數設定</h2>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">請依序設定目標產業、預計資本架構與團隊語言準備度，系統將針對五大維度啟動 10 題情境避雷評估。</p>
+            </div>
+            <span class="text-xs font-bold text-safe-700 bg-safe-50 border border-emerald-200 px-3 py-1.5 rounded-xl shrink-0">
+              10 題五軸情境測驗・約 3 分鐘
+            </span>
+          </div>
+
+          <!-- 1. 目標產業 -->
+          <div class="mt-6">
+            <label class="block text-sm font-extrabold text-slate-900 mb-3">
+              1. 選擇目標產業領域 <span class="text-alert-600">*</span>
+            </label>
+            <div id="setup-industry-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- JS 渲染 -->
+            </div>
+          </div>
+
+          <!-- 2. 預計資本架構（含「借用越南人頭代持」即時紅線警告） -->
+          <div class="mt-7">
+            <label class="block text-sm font-extrabold text-slate-900 mb-3">
+              2. 選擇預計資本與股權架構 <span class="text-alert-600">*</span>
+            </label>
+            <div id="setup-entity-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- JS 渲染 -->
+            </div>
+
+            <!-- 關鍵互動：點選「借用越南人頭代持」立即彈出醒目紅色法律紅線警告框 -->
+            <div id="nominee-redline-box" class="hidden mt-4 rounded-2xl bg-alert-50 border-2 border-alert-600 p-4 sm:p-5 flex items-start gap-3.5 shadow-sm animate-fade-in">
+              <div class="w-9 h-9 rounded-xl bg-alert-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="space-y-1 text-xs sm:text-sm text-red-950 leading-relaxed">
+                <p class="font-black text-alert-600 text-sm sm:text-base">
+                  🚨 最高級別法律紅線警告：越南法規下「人頭代持」不受法律保障！
+                </p>
+                <p>
+                  根據胡志明市多位前輩在「過往失敗停損案例」中繳過最昂貴的學費：<strong>越南現行法規不承認規避外資審查的口頭或私下「借名代持（人頭登記）」協議</strong>。前期虧損時相安無事，一旦門市獲利、品牌起飛或雙方理念分歧，所有營業執照、店面租約與銀行帳戶皆在人頭名下，<strong>資金與店面隨時有被侵占且無法透過訴訟追回的極高歸零風險！</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 團隊與語言準備度 -->
+          <div class="mt-7">
+            <label class="block text-sm font-extrabold text-slate-900 mb-3">
+              3. 選擇團隊配置與跨語言溝通準備度 <span class="text-alert-600">*</span>
+            </label>
+            <div id="setup-lang-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- JS 渲染 -->
+            </div>
+          </div>
+
+          <!-- 驗證錯誤提示 -->
+          <p id="setup-error-msg" class="hidden mt-5 text-sm font-bold text-alert-600 flex items-center gap-1.5">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>請先完成上述 3 項出發前背景設定，再進入 10 題情境避雷測驗。</span>
+          </p>
+
+          <!-- 開始測驗按鈕 -->
+          <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-xs text-slate-500">純前端即時運算、免註冊登入，不會蒐集或上傳任何商業機密資料。</p>
+            <button
+              onclick="startQuizFlow()"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-ocean-800 hover:bg-ocean-700 text-white font-bold text-sm sm:text-base shadow-md transition-all cursor-pointer"
+            >
+              <span>進入 10 題五軸情境測驗</span>
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步驟 2：10 題五軸情境避雷測驗 -->
+      <div id="assess-step-1" class="hidden max-w-3xl mx-auto">
+        <div class="mb-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="q-profile-badge" class="px-2.5 py-1 rounded-lg bg-ocean-900 text-white text-xs font-bold">產業</span>
+              <span id="q-dim-badge" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-safe-700 border border-emerald-200 text-xs font-bold">維度</span>
+            </div>
+            <span class="text-sm font-extrabold text-slate-700">
+              檢測進度 <span id="q-counter" class="text-ocean-800">1 / 10</span>
+            </span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+            <div id="q-progress-bar" class="h-full bg-gradient-to-r from-ocean-800 via-blue-600 to-safe-600 rounded-full transition-all duration-300" style="width: 10%;"></div>
+          </div>
+        </div>
+
+        <div id="q-card" class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8 animate-fade-in">
+          <span id="q-tag" class="text-xs font-extrabold uppercase tracking-wider text-ocean-700 block mb-2">Q1</span>
+          <h3 id="q-title" class="text-lg sm:text-2xl font-bold text-slate-900 leading-snug">題目</h3>
+          <p id="q-context" class="text-xs sm:text-sm text-slate-500 mt-2 mb-6 leading-relaxed">情境提示</p>
+
+          <div id="q-options" class="space-y-3">
+            <!-- JS 動態生成選項 -->
+          </div>
+
+          <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between gap-3">
+            <button
+              id="q-btn-prev"
+              onclick="prevQuizQuestion()"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold transition-colors cursor-pointer"
+            >
+              <span>← 上一題</span>
+            </button>
+
+            <button
+              id="q-btn-next"
+              onclick="nextQuizQuestion()"
+              class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+            >
+              <span id="q-btn-next-text">下一題</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 運算過場動畫 -->
+      <div id="assess-analyzing" class="hidden max-w-lg mx-auto py-16 text-center">
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-8">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-ocean-900 text-emerald-400 flex items-center justify-center mb-5 shadow-md">
+            <svg class="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+              <path class="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-black text-slate-900">正在比對五軸安全基準線（75 分）與雙向田調視角...</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-2">正在依據你的資本架構、產業別與 10 題情境填答生成客製避雷處方箋</p>
+        </div>
+      </div>
+
+      <!-- 步驟 3：AI 避雷診斷報告儀表板 -->
+      <div id="assess-step-2" class="hidden space-y-6 animate-fade-in">
+        <!-- V0.5 實證數據匯入宣告橫幅 -->
+        <div class="rounded-2xl bg-warn-50 border border-amber-200 p-4 flex items-start gap-3">
+          <span class="text-lg shrink-0">📌</span>
+          <p class="text-xs sm:text-sm text-amber-950 leading-relaxed">
+            <strong>V0.5 展示架構說明：</strong>
+            目前風險權重採用「前期文獻與先行者訪談預研模型」示範；實證數據將於 2027 年 7–10 月胡志明市 90 天田調完成 20 位訪談後，於 <strong>V1.0–V3.0</strong> 陸續匯入校準。
+          </p>
+        </div>
+
+        <!-- 頂部結果橫幅 -->
+        <div class="bg-ocean-900 text-white rounded-3xl p-5 sm:p-7 shadow-card flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-safe-500 text-slate-950 text-xs font-extrabold">AI 避雷診斷完成</span>
+              <span id="res-profile-tags" class="text-xs text-blue-200 font-medium">產業・資本架構・團隊語言</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight">越南創業落地體質診斷報告儀表板</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="copyDiagnosticSummary()" class="px-4 py-2.5 rounded-xl bg-safe-600 hover:bg-safe-500 text-white text-xs sm:text-sm font-extrabold transition-colors cursor-pointer flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>複製報告摘要</span>
+            </button>
+            <button onclick="switchMainTab('toolkits')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer">
+              前往工具附錄包
+            </button>
+            <button onclick="resetQuizFlow()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold transition-colors cursor-pointer">
+              重新測驗
+            </button>
+          </div>
+        </div>
+
+        <!-- 雙欄核心視覺化：越南落地安全指數 + 內嵌 SVG 五軸雷達圖 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- 左卡：越南落地安全指數（0–100 分） -->
+          <div class="lg:col-span-5 bg-white rounded-3xl shadow-card border border-slate-200 p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900">越南落地安全指數</h3>
+                <span class="text-[11px] font-bold text-safe-700 bg-safe-50 px-2 py-0.5 rounded-md">安全基準線 ≥ 75 分</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">分數越高代表抗風險體質越穩健（0–100 分）</p>
+            </div>
+
+            <div class="my-5 flex flex-col items-center">
+              <div class="relative w-48 h-48 flex items-center justify-center">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 180 180">
+                  <circle cx="90" cy="90" r="74" fill="none" stroke="#e2e8f0" stroke-width="14" />
+                  <circle id="res-gauge-arc" class="gauge-arc" cx="90" cy="90" r="74" fill="none" stroke="#059669" stroke-width="14" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">安全指數</span>
+                  <div class="flex items-baseline gap-0.5">
+                    <span id="res-safety-num" class="text-5xl font-black text-slate-900">0</span>
+                    <span class="text-sm font-bold text-slate-400">/100</span>
+                  </div>
+                  <span id="res-gap-pill" class="mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">距離基準 0 分</span>
+                </div>
+              </div>
+
+              <div id="res-tier-card" class="w-full mt-4 rounded-2xl p-4 border text-left">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span id="res-tier-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold">等級徽章</span>
+                  <h4 id="res-tier-title" class="font-black text-base text-slate-900">體質判定</h4>
+                </div>
+                <p id="res-custom-summary" class="text-xs sm:text-sm text-slate-700 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右卡：內嵌 SVG 五軸雷達圖（使用者 vs 75 分安全基準線） -->
+          <div class="lg:col-span-7 bg-white rounded-3xl shadow-card border border-slate-200 p-6 flex flex-col justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900">五軸落地體質雷達圖</h3>
+                <p class="text-xs text-slate-500 mt-0.5">疊加對比「在越存活創業者 75 分安全基準線」定位體質缺口</p>
+              </div>
+              <div class="flex items-center gap-3 text-[11px] font-bold">
+                <span class="flex items-center gap-1.5 text-ocean-800">
+                  <span class="w-3 h-3 rounded-sm bg-blue-700/25 border-2 border-ocean-800"></span>你的檢測得分
+                </span>
+                <span class="flex items-center gap-1.5 text-safe-700">
+                  <span class="w-3 h-0.5 border-t-2 border-dashed border-safe-600"></span>75 分安全基準線
+                </span>
+              </div>
+            </div>
+
+            <!-- 內嵌 SVG 五軸雷達圖 -->
+            <div class="w-full flex justify-center my-2">
+              <svg id="radar-5-svg" viewBox="0 0 540 375" class="w-full max-w-[500px] h-auto overflow-visible" role="img" aria-label="五軸落地體質雷達圖">
+                <g id="radar-grid-layer"></g>
+                <!-- 75 分安全基準線多邊形 -->
+                <polygon id="radar-benchmark-poly" fill="rgba(5, 150, 105, 0.08)" stroke="#059669" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round" />
+                <!-- 使用者五軸多邊形 -->
+                <polygon id="radar-user-poly" class="radar-poly" fill="rgba(30, 58, 138, 0.22)" stroke="#1e3a8a" stroke-width="2.6" stroke-linejoin="round" />
+                <g id="radar-dots-layer"></g>
+                <g id="radar-labels-layer"></g>
+              </svg>
+            </div>
+
+            <!-- 五維度得分條 -->
+            <div id="res-dim-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-3 border-t border-slate-100">
+              <!-- JS 動態生成 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 雙向視角剖析卡：針對得分最低的兩個弱項 -->
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="mb-5">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-bold mb-2">
+              DUAL-PERSPECTIVE ANALYSIS・雙向視角弱項剖析卡
+            </span>
+            <h3 class="text-xl font-black text-slate-900">針對你得分最低的兩大弱項：台青前輩踩坑實錄 × 留台越南校友建議</h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">同時檢視台灣人過去曾繳過的學費，以及留台越南校友從在地商業邏輯給予的修正建議。</p>
+          </div>
+          <div id="res-dual-insights" class="space-y-4">
+            <!-- JS 動態生成 -->
+          </div>
+        </div>
+
+        <!-- 客製化避雷處方箋：一定要做的 3 件事 vs 絕對不要做的 3 件事 -->
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="mb-5">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-warn-50 text-amber-800 border border-amber-200 text-xs font-bold mb-2">
+              CUSTOMIZED PRESCRIPTION・客製化避雷處方箋
+            </span>
+            <h3 class="text-xl font-black text-slate-900">來越南前「一定要做的 3 件事」vs「絕對不要做的 3 件事」</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="rounded-2xl bg-safe-50/70 border border-emerald-200 p-5">
+              <h4 class="font-extrabold text-safe-700 text-base mb-3 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-safe-600 text-white text-xs flex items-center justify-center">✓</span>
+                來越南前一定要做的 3 件事（DO）
+              </h4>
+              <ol id="res-do-list" class="space-y-3 text-xs sm:text-sm text-slate-800 leading-relaxed"></ol>
+            </div>
+            <div class="rounded-2xl bg-alert-50/70 border border-red-200 p-5">
+              <h4 class="font-extrabold text-alert-600 text-base mb-3 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-alert-600 text-white text-xs flex items-center justify-center">✕</span>
+                落地時絕對不要做的 3 件事（DON'T）
+              </h4>
+              <ol id="res-dont-list" class="space-y-3 text-xs sm:text-sm text-slate-800 leading-relaxed"></ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- 分頁三：數位指南 & 胡志明熱區 (Digital Guide & HCMC Hotspots)           -->
+    <!-- ====================================================================== -->
+    <section id="tab-guide" class="tab-panel hidden animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+
+      <!-- 區塊 A：胡志明市三大調研商業熱區互動情報圖 -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+        <div class="mb-6">
+          <span class="inline-block px-2.5 py-1 rounded-lg bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-bold mb-2">
+            HCMC FIELDWORK HOTSPOTS・胡志明市三大調研商業熱區
+          </span>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900">胡志明市三大核心聚落互動情報圖</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">點擊切換「第 1 郡」、「第 3 郡（標註第 1 場沙龍據點 À Kàfe - Võ Thị Sáu）」與「第 7 郡富美興」，檢視各區租金特性、消費客群輪廓與排雷重點。</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-6" id="district-tab-buttons">
+          <!-- JS 渲染 -->
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <!-- 左側：胡志明市三郡空間示意 SVG -->
+          <div class="lg:col-span-5 rounded-2xl bg-slate-50 border border-slate-200 p-4 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+              <span>胡志明市三大田調商業聚落相對位置</span>
+              <span class="text-ocean-800">可點擊郡區切換</span>
+            </div>
+            <svg viewBox="0 0 380 300" class="w-full h-auto rounded-xl bg-white border border-slate-200" role="img" aria-label="胡志明市第1郡第3郡第7郡商業熱區示意圖">
+              <!-- 西貢河 -->
+              <path d="M272,10 C306,72 286,128 320,178 C345,214 312,256 346,295" fill="none" stroke="#bfdbfe" stroke-width="14" stroke-linecap="round" />
+              <text x="323" y="135" fill="#1d4ed8" font-size="10" font-weight="700" transform="rotate(68 323 135)">西貢河 Saigon River</text>
+
+              <!-- 第 3 郡 (Quận 3) -->
+              <g id="map-d3" onclick="selectHcmcDistrict('d3')" class="cursor-pointer transition-opacity hover:opacity-95">
+                <path d="M48,42 L175,34 L188,122 L72,140 Z" stroke-width="2.5" />
+                <text x="118" y="78" text-anchor="middle" font-size="13.5" font-weight="900">第 3 郡 (Quận 3)</text>
+                <text x="118" y="96" text-anchor="middle" font-size="10" font-weight="600">文創老屋・À Kàfe 沙龍</text>
+              </g>
+
+              <!-- 第 1 郡 (Quận 1) -->
+              <g id="map-d1" onclick="selectHcmcDistrict('d1')" class="cursor-pointer transition-opacity hover:opacity-95">
+                <path d="M180,34 L270,48 L284,155 L192,152 Z" stroke-width="2.5" />
+                <text x="234" y="94" text-anchor="middle" font-size="13.5" font-weight="900">第 1 郡 (Quận 1)</text>
+                <text x="234" y="112" text-anchor="middle" font-size="10" font-weight="600">國際商務・品牌旗艦核心</text>
+              </g>
+
+              <!-- 跨橋幹道虛線 -->
+              <line x1="226" y1="154" x2="215" y2="190" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4" />
+
+              <!-- 第 7 郡 (Quận 7 富美興) -->
+              <g id="map-d7" onclick="selectHcmcDistrict('d7')" class="cursor-pointer transition-opacity hover:opacity-95">
+                <path d="M105,190 L298,184 L288,276 L122,272 Z" stroke-width="2.5" />
+                <text x="204" y="226" text-anchor="middle" font-size="13.5" font-weight="900">第 7 郡 (富美興)</text>
+                <text x="204" y="245" text-anchor="middle" font-size="10" font-weight="600">台商生活圈・餐飲測試場</text>
+              </g>
+
+              <!-- 沙龍據點標記 -->
+              <circle cx="96" cy="116" r="5.5" fill="#d97706" stroke="#ffffff" stroke-width="1.5" />
+              <circle cx="242" cy="134" r="5.5" fill="#059669" stroke="#ffffff" stroke-width="1.5" />
+            </svg>
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-warn-600 inline-block"></span>第1場沙龍：À Kàfe - Võ Thị Sáu</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-safe-600 inline-block"></span>第2場沙龍：商業區共同工作空間</span>
+            </div>
+          </div>
+
+          <!-- 右側：選中郡區深度情報 -->
+          <div id="hcmc-district-detail" class="lg:col-span-7 rounded-2xl bg-slate-50 border border-slate-200 p-5 sm:p-6 flex flex-col justify-between">
+            <!-- JS 動態更新 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 區塊 B：五大篇章實戰指南瀏覽器（產業別＋痛點標籤雙重篩選＋成功×失敗雙軌對照） -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-safe-50 text-safe-700 border border-emerald-200 text-xs font-bold mb-2">
+              DUAL-TRACK PRACTICAL GUIDE・成功模式 × 失敗停損案例雙軌指南
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">《新南向落地指南》五大篇章瀏覽器（2.5–3 萬字全數位架構）</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              支援「產業別」與「痛點標籤」雙重篩選；每篇皆收錄<strong>「現行成功模式」</strong>與<strong>「過往失敗停損案例」</strong>雙軌對照卡片。
+            </p>
+          </div>
+        </div>
+
+        <!-- 雙重篩選列 -->
+        <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 mb-6 space-y-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-extrabold text-slate-700 mr-1">依產業別篩選：</span>
+            <div id="guide-industry-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200">
+            <span class="text-xs font-extrabold text-slate-700 mr-1">依痛點標籤：</span>
+            <div id="guide-topic-filters" class="flex flex-wrap gap-1.5"></div>
+          </div>
+        </div>
+
+        <!-- 五大篇章列表 -->
+        <div id="guide-chapters-list" class="space-y-4">
+          <!-- JS 動態渲染 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- 分頁四：失敗復盤 & 雙向視角 (Failure Review & Dual Perspectives)        -->
+    <!-- ====================================================================== -->
+    <section id="tab-failurelab" class="tab-panel hidden animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+
+      <!-- 區塊 A：6 張「台灣人以為 vs 越南在地真相」互動翻轉卡 -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-alert-50 text-alert-600 border border-red-200 text-xs font-bold mb-2">
+              DUAL-PERSPECTIVE FLIP CARDS・打破單向盲區
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">6 張「台灣人以為 vs 越南在地真相」互動翻轉卡</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">點擊任一張卡片，翻轉檢視留台越南校友與在地數據揭示的消費習慣、員工流動獎懲與合資信任真相。</p>
+          </div>
+          <button
+            id="btn-toggle-all-myths"
+            onclick="toggleAllMyths()"
+            class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors shrink-0 cursor-pointer"
+          >
+            一鍵翻轉全部真相
+          </button>
+        </div>
+
+        <div id="myth-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- JS 動態渲染 6 張翻轉卡 -->
+        </div>
+      </div>
+
+      <!-- 區塊 B：2 場獨立主辦「出海排雷焦點沙龍」與 6 支短影音企劃（EP1–EP6） -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8 space-y-6">
+        <div>
+          <span class="inline-block px-2.5 py-1 rounded-lg bg-warn-50 text-amber-800 border border-amber-200 text-xs font-bold mb-2">
+            FOCUS SALONS & GROWTH FUNNEL・焦點沙龍與短影音導流漏斗
+          </span>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900">2 場獨立主辦「出海排雷焦點沙龍」× 6 支短影音企劃（EP1–EP6）</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+            由申請人以獨立研究者身分籌辦 2 場焦點座談（Focus Group）拆解失敗教訓，並透過 6 支 60–90 秒 Reels／Shorts 結合已爭取之<strong>新台幣 5–10 萬元行銷廣告贊助</strong>精準導流至《AI 避雷檢測互動網頁》，放大點擊觸及 KPI。
+          </p>
+        </div>
+
+        <!-- 2 場獨立主辦沙龍卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="rounded-2xl bg-ocean-900 text-white p-5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-warn-500 text-slate-950 text-[11px] font-extrabold mb-2">第 1 場（申請人獨立主辦）｜2027/09/11（第 8 週）</span>
+            <h3 class="text-lg font-black">台越青年出海排雷焦點沙龍（失敗經驗實戰座談）</h3>
+            <p class="text-xs sm:text-sm text-blue-100 mt-2 leading-relaxed">
+              <strong>地點：</strong>胡志明市第 3 郡「À Kàfe - Võ Thị Sáu｜Coffee & Bubble Tea Shop」<br />
+              <strong>規模與功能：</strong>約 30 人深度焦點座談，系統拆解法規與管理失敗案例，並作為互動網頁 V2.0 更新依據。
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-ocean-800 text-white p-5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-safe-500 text-slate-950 text-[11px] font-extrabold mb-2">第 2 場（申請人獨立主辦）｜2027/10/01–10/02（第 11 週）</span>
+            <h3 class="text-lg font-black">台越青年跨國數位協作與經營突圍沙龍</h3>
+            <p class="text-xs sm:text-sm text-blue-100 mt-2 leading-relaxed">
+              <strong>地點：</strong>胡志明市商業區「共同工作空間（Co-working Space，如 Toong / Dreamplex）」<br />
+              <strong>規模與功能：</strong>聚焦留台校友與 AI 數位工具跨國協作突圍，並為年底「台灣主題」大型策展暖身。
+            </p>
+          </div>
+        </div>
+
+        <!-- EP1–EP6 短影音企劃網格 -->
+        <div>
+          <h3 class="text-sm font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-safe-600"></span>
+            6 支田調精華短影音 Reels／Shorts 企劃表（導流至 AI 避雷檢測互動網頁）
+          </h3>
+          <div id="reels-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            <!-- JS 動態渲染 EP1–EP6 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 區塊 C：完整 14 題半結構式銳利訪綱瀏覽器 -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+        <div class="mb-5">
+          <span class="inline-block px-2.5 py-1 rounded-lg bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-bold mb-2">
+            14-ITEM INTERVIEW PROTOCOL・半結構式銳利訪綱與業務 Probing 探詢
+          </span>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900">完整 14 題半結構式銳利訪綱瀏覽器</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            支援依模組分類檢視，結合「前測問卷過濾（含過往失敗／停損次數）」與「60 分鐘業務 Probing 深度追問」，所有訪綱皆提前提供受訪者並簽署著作開源授權書。
+          </p>
+        </div>
+
+        <!-- 分類篩選按鈕 -->
+        <div id="interview-filter-btns" class="flex flex-wrap gap-1.5 mb-5">
+          <!-- JS 渲染 -->
+        </div>
+
+        <!-- 訪綱模組卡片列表 -->
+        <div id="interview-modules-container" class="space-y-4">
+          <!-- JS 動態渲染 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- 分頁五：互動工具附錄包 (Interactive Toolkits Appendix)                  -->
+    <!-- ====================================================================== -->
+    <section id="tab-toolkits" class="tab-panel hidden animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <!-- 工具包標題與子分頁切換 -->
+      <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-4 sm:p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-safe-50 text-safe-700 border border-emerald-200 text-xs font-bold mb-1.5">
+              OPEN-SOURCE PRACTICAL TOOLKITS・實用工具附錄包
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">台灣青創可直接套用的三大互動工具</h2>
+          </div>
+
+          <div class="flex flex-wrap gap-2" id="toolkit-subtabs">
+            <button data-subtab="checklist" onclick="switchToolkitSubtab('checklist')" class="tk-subtab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
+              工具 1：法規避雷檢核表 (10項)
+            </button>
+            <button data-subtab="calculator" onclick="switchToolkitSubtab('calculator')" class="tk-subtab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
+              工具 2：雇主真實用人成本試算器
+            </button>
+            <button data-subtab="aitools" onclick="switchToolkitSubtab('aitools')" class="tk-subtab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
+              工具 3：AI 與數位工具導入清單
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工具 1：台越公司設立與法規避雷檢核表（10 項可勾選 Checklist + 一鍵匯出 .txt） -->
+      <div id="subtab-checklist" class="tk-panel animate-fade-in bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <h3 class="text-lg sm:text-xl font-black text-slate-900">工具 1：《台越公司設立與法規避雷檢核表》（10 項 Checklist）</h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">逐項勾選確認你的合規準備進度，即時計算完成率並支援一鍵匯出檢核報告（.txt）。</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button onclick="exportChecklistTxt()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>一鍵匯出檢核報告 (.txt)</span>
+            </button>
+            <button onclick="resetChecklist()" class="px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold transition-colors cursor-pointer">
+              重設勾選
+            </button>
+          </div>
+        </div>
+
+        <!-- 完成度與高危紅線提醒 -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <div class="md:col-span-7 rounded-2xl bg-slate-50 border border-slate-200 p-4">
+            <div class="flex items-center justify-between text-xs sm:text-sm font-bold mb-2">
+              <span class="text-slate-700">目前法規檢核完成度</span>
+              <span id="cl-progress-text" class="text-ocean-800 font-black">0 / 10 (0%)</span>
+            </div>
+            <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+              <div id="cl-progress-bar" class="h-full bg-gradient-to-r from-ocean-800 to-safe-600 rounded-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div id="cl-redline-alert" class="md:col-span-5 rounded-2xl bg-alert-50 border border-red-200 p-4 text-xs sm:text-sm text-red-900 font-semibold">
+            <!-- JS 動態更新 -->
+          </div>
+        </div>
+
+        <!-- 10 項檢核表清單 -->
+        <div id="checklist-groups-container" class="space-y-6">
+          <!-- JS 動態渲染 -->
+        </div>
+      </div>
+
+      <!-- 工具 2：越南雇主真實用人成本試算器（支援 VND 與 TWD 即時輸入與換算） -->
+      <div id="subtab-calculator" class="tk-panel hidden animate-fade-in space-y-6">
+        <div class="bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-5 border-b border-slate-100">
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-md bg-warn-50 text-amber-800 border border-amber-200 text-[11px] font-bold mb-1.5">
+                避開低估人事成本地雷・支援 VND ⇄ TWD 雙向即時換算
+              </span>
+              <h3 class="text-lg sm:text-xl font-black text-slate-900">工具 2：《越南雇主真實用人成本試算器》</h3>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                輸入員工期望月薪，自動加計越南雇主法定強制保險（社會保險 17.5%＋醫療保險 3%＋失業保險 1% = <strong>21.5%</strong>）、工會費（<strong>2%</strong>，合計 <strong>23.5%</strong>）與第 13 個月年終獎金月均攤提（<strong>8.33%</strong>）。
+              </p>
+            </div>
+            <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg shrink-0">參考匯率：1 TWD = 780 VND</span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+            <!-- 左側雙幣別輸入面板 -->
+            <div class="lg:col-span-5 space-y-5 bg-slate-50 rounded-2xl border border-slate-200 p-5">
+              <!-- VND 輸入 -->
+              <div>
+                <label for="input-salary-vnd" class="block text-xs sm:text-sm font-extrabold text-slate-800 mb-1.5">
+                  單人期望月薪 — 越南盾（VND）
+                </label>
+                <div class="relative">
+                  <input
+                    id="input-salary-vnd"
+                    type="number"
+                    min="1000000"
+                    step="500000"
+                    value="18000000"
+                    oninput="onSalaryInput('vnd')"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-14 text-base font-black text-ocean-900 focus:outline-none focus:border-ocean-800"
+                  />
+                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-extrabold text-slate-400">VND</span>
+                </div>
+              </div>
+
+              <!-- TWD 同步輸入 -->
+              <div>
+                <label for="input-salary-twd" class="block text-xs sm:text-sm font-extrabold text-slate-800 mb-1.5">
+                  單人期望月薪 — 新台幣等值（TWD，雙向同步）
+                </label>
+                <div class="relative">
+                  <input
+                    id="input-salary-twd"
+                    type="number"
+                    min="1000"
+                    step="500"
+                    value="23077"
+                    oninput="onSalaryInput('twd')"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-14 text-base font-black text-safe-700 focus:outline-none focus:border-safe-600"
+                  />
+                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-extrabold text-slate-400">TWD</span>
+                </div>
+              </div>
+
+              <!-- 常見職級快速帶入 -->
+              <div>
+                <span class="block text-[11px] font-bold text-slate-500 mb-2">胡志明市常見職級薪資快速帶入：</span>
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" onclick="setCalcSalaryVnd(10000000)" class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-ocean-800 text-[11px] font-bold text-slate-700 cursor-pointer">門市基層 10M ₫</button>
+                  <button type="button" onclick="setCalcSalaryVnd(18000000)" class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-ocean-800 text-[11px] font-bold text-slate-700 cursor-pointer">營運行銷 18M ₫</button>
+                  <button type="button" onclick="setCalcSalaryVnd(32000000)" class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-ocean-800 text-[11px] font-bold text-slate-700 cursor-pointer">雙語/AI 主管 32M ₫</button>
+                </div>
+              </div>
+
+              <!-- 團隊人數滑桿 -->
+              <div class="pt-3 border-t border-slate-200">
+                <div class="flex items-center justify-between mb-1.5">
+                  <label for="calc-headcount" class="text-xs sm:text-sm font-extrabold text-slate-800">預計團隊編制人數</label>
+                  <span id="calc-headcount-display" class="text-base font-black text-ocean-800">5 人</span>
+                </div>
+                <input id="calc-headcount" type="range" min="1" max="30" step="1" value="5" oninput="recalcEmployerCost()" class="w-full h-2 bg-slate-300 rounded-lg cursor-pointer" />
+                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                  <span>1 人</span>
+                  <span>15 人</span>
+                  <span>30 人</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 右側試算結果拆解 -->
+            <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="rounded-2xl bg-ocean-900 text-white p-5">
+                  <p class="text-xs text-blue-200 font-semibold">全團隊「真實每月總用人成本」</p>
+                  <p id="res-team-month-twd" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">NT$ 0</p>
+                  <p id="res-team-month-vnd" class="text-xs text-slate-300 mt-1 font-medium">≈ 0 VND / 月</p>
+                </div>
+                <div class="rounded-2xl bg-ocean-800 text-white p-5">
+                  <p class="text-xs text-blue-200 font-semibold">全團隊「年度總人力持有預算」</p>
+                  <p id="res-team-year-twd" class="text-2xl sm:text-3xl font-black text-amber-300 mt-1">NT$ 0</p>
+                  <p class="text-xs text-blue-100 mt-1 font-medium">含 23.5% 法定負擔與第 13 個月獎金</p>
+                </div>
+              </div>
+
+              <!-- 單人月度隱性成本結構拆解 -->
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-5 space-y-3.5">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <h4 class="text-sm font-extrabold text-slate-900">單人真實成本拆解（實際支出為期望月薪之 <span class="text-alert-600">131.83%</span>）</h4>
+                  <span id="res-single-total-twd" class="text-sm font-black text-ocean-800">NT$ 0 / 人月</span>
+                </div>
+
+                <!-- 比例堆疊條 -->
+                <div class="w-full h-3.5 rounded-full overflow-hidden flex bg-slate-200">
+                  <div class="bg-ocean-900 h-full" style="width: 75.85%;" title="期望月薪"></div>
+                  <div class="bg-warn-500 h-full" style="width: 17.83%;" title="法定強制保險 21.5% + 工會費 2%"></div>
+                  <div class="bg-safe-600 h-full" style="width: 6.32%;" title="第13個月年終月攤提 8.33%"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <div class="bg-white rounded-xl border border-slate-200 p-3">
+                    <div class="flex items-center gap-1.5 font-bold text-slate-600">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-ocean-900"></span>員工期望月薪（100%）
+                    </div>
+                    <p id="res-single-base-twd" class="font-extrabold text-slate-900 mt-1">NT$ 0</p>
+                    <p id="res-single-base-vnd" class="text-[11px] text-slate-400">0 VND</p>
+                  </div>
+                  <div class="bg-white rounded-xl border border-slate-200 p-3">
+                    <div class="flex items-center gap-1.5 font-bold text-slate-600">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-warn-500"></span>強制保險 21.5%＋工會 2%
+                    </div>
+                    <p id="res-single-ins-twd" class="font-extrabold text-amber-700 mt-1">NT$ 0</p>
+                    <p id="res-single-ins-vnd" class="text-[11px] text-slate-400">0 VND</p>
+                  </div>
+                  <div class="bg-white rounded-xl border border-slate-200 p-3">
+                    <div class="flex items-center gap-1.5 font-bold text-slate-600">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-safe-600"></span>第 13 個月獎金月攤提
+                    </div>
+                    <p id="res-single-bonus-twd" class="font-extrabold text-safe-700 mt-1">NT$ 0</p>
+                    <p id="res-single-bonus-vnd" class="text-[11px] text-slate-400">0 VND</p>
+                  </div>
+                </div>
+
+                <p class="text-[11px] text-slate-500 leading-relaxed pt-1">
+                  * 計算基準：社會保險 17.5% ＋ 醫療保險 3% ＋ 失業保險 1% ＝ 21.5%，加上工會費 2%（合計 23.5%），以及第 13 個月年終獎金按月均攤（1/12 ≈ 8.33%）。實務申報上限依胡志明市最新基本工資級距調整。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工具 3：中小企業出海 AI 與數位工具導入清單 -->
+      <div id="subtab-aitools" class="tk-panel hidden animate-fade-in bg-white rounded-3xl shadow-card border border-slate-200 p-5 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-lg sm:text-xl font-black text-slate-900">工具 3：《中小企業出海 AI 與數位工具導入清單》</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">支援依三大核心營運場景篩選推薦工具與在地導入避坑提醒。</p>
+        </div>
+
+        <div id="aitool-category-filters" class="flex flex-wrap gap-2">
+          <!-- JS 動態生成篩選鈕 -->
+        </div>
+
+        <div id="aitools-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- JS 動態渲染工具卡片 -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 頁尾宣告 (Footer) ==================== -->
+  <footer class="mt-12 bg-ocean-950 text-slate-300 border-t border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-4">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <p class="text-sm sm:text-base font-black text-white">
+            《打破倖存者偏差：台越青年胡志明市創業實證訪談與 AI 避雷檢測》
+          </p>
+          <p class="text-xs text-slate-400">
+            《越南創業落地體質與避雷檢測》開源互動知識平台（V0.5 展示架構）｜申請人：黃蘅軒（築夢 7・創業育成與產業交流）
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-emerald-400 text-xs font-bold">#教育部青年發展署</span>
+          <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-amber-300 text-xs font-bold">#青年百億海外圓夢基金計畫</span>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] sm:text-xs text-slate-400">
+        <span class="text-emerald-400 font-bold">100% 公益開源・非營利・零預算自主開發（無償提供大專院校育成中心與青年學子免費使用）</span>
+        <span>V0.5 展示架構，實證數據將於海外 20 位訪談後於 V1.0–V3.0 陸續匯入</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== Toast 訊息通知（禁止使用 alert） ==================== -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="bg-ocean-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2.5 text-xs sm:text-sm font-bold">
+      <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <span id="toast-text">已完成操作</span>
+    </div>
+  </div>
+
+  <!-- ==================== 完整互動邏輯 (Vanilla JS) ==================== -->
+  <script>
+    /* =========================================================================
+       1. 核心資料模型（100% 對齊最新版企劃書）
+    ========================================================================= */
+
+    // 四大調研產業與 4×3 細分族群解析
+    const SECTORS = [
+      {
+        id: 'fb',
+        name: '1. 精緻餐飲與連鎖品牌（F&B）',
+        short: '精緻餐飲',
+        counts: { tw: 3, vn: 1, mix: 1 },
+        total: 5,
+        tag: '原物料檢驗 × 口味在地化',
+        icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+        overallFocus: '探討台灣手搖飲、烘焙與精緻餐飲文化，如何克服跨境原物料檢驗壁壘、甜度與口味調整，以及在地冷鏈與食材供應鏈整合。',
+        failureTypes: '未釐清進口食品檢驗時程即簽訂高租金長約導致斷料停業、低估 GrabFood/ShopeeFood 抽成與消防（PCCC）審查卡關。',
+        cellDetails: {
+          tw: {
+            focus: '聚焦台灣創業者從 0 到 1 建置中央廚房、申請消防與食安執照，以及跨海原物料通關的真實成本結構。',
+            failure: '曾因台灣總部堅持 100% 空運原料造成毛利歸零而收掉首店，後續改採「核心風味進口＋在地替代原料」才轉虧為盈。'
+          },
+          vn: {
+            focus: '由具 1 年以上主管／創辦人經驗之留台越南校友，拆解越南本地客群對甜度、冰塊、價格敏感度與社群打卡的真實決策邏輯。',
+            failure: '點出台灣品牌常見「初期排隊爆紅、三個月後失去回購率」的產品週期失誤與外送定價盲點。'
+          },
+          mix: {
+            focus: '借重台越混血創業者天然雙語與在地人脈優勢，剖析如何同時整合台灣職人製程與越南本地供應商談判。',
+            failure: '分享早期與本地房東或合夥人因口頭認知落差導致店面裝修延宕、被迫認賠搬遷的停損復盤。'
+          }
+        },
+        doItem: '簽訂長年店面租約前，先以快閃試賣測試胡志明在地客群對甜度、份量與外送平台定價的真實接受度，並同步確認消防（PCCC）合規條件。',
+        dontItem: '切忌在尚未取得進口食品檢驗許可前就依賴台灣空運物料，避免開幕後陷入海關卡關斷料或成本翻倍困境。'
+      },
+      {
+        id: 'creative',
+        name: '2. 文創設計與空間創生',
+        short: '文創空間',
+        counts: { tw: 2, vn: 2, mix: 1 },
+        total: 5,
+        tag: '老屋活化 × 生活風格體驗',
+        icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>`,
+        overallFocus: '分析台灣美學設計、選物策展與老屋活化經驗，如何在胡志明市（特別是第 3 郡巷弄）高度競爭的生活風格消費市場中落地。',
+        failureTypes: '法式老屋水電滲水導致裝修預算失控超支、租約未公證遭房東提前收回、單靠「台灣文青風格」難以對抗本地高美學咖啡空間。',
+        cellDetails: {
+          tw: {
+            focus: '深入訪談在胡志明改造老屋空間的台灣設計師與主理人，拆解越南本地工班發包、材料採購與複合式坪效設計。',
+            failure: '曾因未採「分階段驗收撥款」導致工程延宕 4 個月白繳租金，最終忍痛認賠更換工班並重整商業模式。'
+          },
+          vn: {
+            focus: '透過留台越南設計／品牌主管視角，解析胡志明 Z 世代對體驗空間的審美標準與社群傳播觸發點。',
+            failure: '揭露台灣文創品牌「定價過高卻缺乏在地文化共鳴」導致曲高和寡、庫存積壓的停損案例。'
+          },
+          mix: {
+            focus: '探討台越混血主理人如何將台灣策展思維融入胡志明市社區生活節奏，打造高黏著度複合場域。',
+            failure: '復盤初期嘗試純藝文展覽空間因現金流無法支撐租金，轉型結合高頻茶飲與沙龍活動才站穩腳步。'
+          }
+        },
+        doItem: '將文創空間設計結合高頻消費（如特色茶飲、策展工作坊或選物聯名），並對裝修工程嚴格執行「分階段驗收撥款」。',
+        dontItem: '不要低估胡志明市本地空間美學的競爭強度，切忌承租產權不清或未經公證之老屋進行重資產裝修。'
+      },
+      {
+        id: 'ecommerce',
+        name: '3. 跨境電商與自媒體科技',
+        short: '跨境電商',
+        counts: { tw: 3, vn: 1, mix: 1 },
+        total: 5,
+        tag: 'TikTok Shop × COD 風控',
+        icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
+        overallFocus: '研究跨境電商代操、台灣美妝生活品牌與短影音自媒體，如何在越南 Shopee、TikTok Shop 與 KOC 直播生態中建立高轉換獲客漏斗。',
+        failureTypes: '高比例貨到付款（COD）惡意拒收與逆向物流虧損、直接翻譯台灣廣告文案轉換率低迷、未辦產品公告即跨境販售遭海關扣押。',
+        cellDetails: {
+          tw: {
+            focus: '訪談在越操作電商與自媒體的台灣創業者，拆解廣告投放 ROI、COD 拒收率壓低機制與正式報關合規流程。',
+            failure: '曾因直接搬運台灣長文案投廣導致獲客成本失控，以及早期忽略保養品公告證件導致整批貨品卡關認賠。'
+          },
+          vn: {
+            focus: '由留台越南行銷／電商主管解析越南年輕數位原生代的滑手機習慣、KOC 直播信任機制與促銷節奏。',
+            failure: '剖析台灣品牌過度依賴單一大型網紅卻忽略數百位在地微網紅（Affiliate KOC）矩陣的投放失敗教訓。'
+          },
+          mix: {
+            focus: '探討雙語自媒體創作者如何跨越文化梗與語言牆，在 TikTok／Reels 打造高互動個人與品牌 IP。',
+            failure: '分享早期試圖同時經營多平台導致團隊過勞、最終砍掉低效通路專攻短影音直播轉換的轉型歷程。'
+          }
+        },
+        doItem: '優先與熟悉越南語境的在地 KOC／留台校友共創短影音，並透過 Zalo 售前確認機制有效壓低 COD 貨到付款拒收率。',
+        dontItem: '絕對不要從台灣總部直接翻譯文案盲目燒錢投廣，或未完成產品公告（Product Notification）即夾帶商品販售。'
+      },
+      {
+        id: 'ai',
+        name: '4. 生成式 AI 與數位工具應用',
+        short: '生成式 AI',
+        counts: { tw: 2, vn: 2, mix: 1 },
+        total: 5,
+        tag: '數位賦能 × 台越 IT 協作',
+        icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+        overallFocus: '探討在越台青與新創團隊如何運用 AI 與數位工具賦能中小企業轉型（智慧餐飲 POS、倉儲庫存水位預測、員工 KPI 追蹤、多語行銷生成），並研究與越南優秀 IT／AI 青年工程師的高效協作模式。',
+        failureTypes: '台灣總部強推過於複雜的 ERP／AI 系統遭基層越南員工抵制退回人工記帳、台越軟體外包規格認知落差導致嚴重返工。',
+        cellDetails: {
+          tw: {
+            focus: '訪談在越導入 AI 數位系統或跨國開發的台灣創業者，拆解如何用輕量數位工具降低門市與倉儲管理損耗。',
+            failure: '曾花費重金採購封閉式複雜系統卻因缺乏現場培訓而閒置，改用輕量雲端工具搭配 AI 多語 SOP 才成功落地。'
+          },
+          vn: {
+            focus: '與留台越南理工／AI 專案主管深談，還原越南本土優秀 IT 工程師的技術優勢、溝通習慣與跨國專案管理訣竅。',
+            failure: '點出台灣業主「只給模糊概念、缺乏明確 PRD 規格書」導致台越工程師交付嚴重落差的真實專案失敗案例。'
+          },
+          mix: {
+            focus: '探討跨文化科技創業青年如何擔任台越技術與商業需求之間的「雙語轉譯橋樑」，加速產品在地化迭代。',
+            failure: '分享早期試圖在越南複製台灣 B2B SaaS 訂閱收費模式受挫，調整為「低門檻導入＋按成效分潤」後的破局經驗。'
+          }
+        },
+        doItem: '從門市或倉儲最痛的單一流程切入（如 Zalo 多語客服或庫存水位預警），並透過雙語 PM 或留台理工校友對齊工程規格。',
+        dontItem: '切忌在未建立基層資料輸入習慣前一次導入龐大複雜系統，也不要在缺乏明確書面規格下啟動跨國軟體外包。'
+      }
+    ];
+
+    const GROUP_LABELS = {
+      tw: '在越台青創業者',
+      vn: '留台越南校友（創辦人／主管級）',
+      mix: '台越混血新二代創業者'
+    };
+
+    // 四階段敏捷迭代開發藍圖
+    const ROADMAP_STAGES = [
+      {
+        ver: 'V0.5',
+        badge: '目前展示原型',
+        date: '出國前展示架構',
+        title: '完成互動平台架構與避雷評估演算法原型',
+        desc: '建立五大分頁互動知識平台、10 題五軸雷達檢測演算法與三大工具附錄包，驗證零預算自主開發可行性。',
+        current: true
+      },
+      {
+        ver: 'V1.0',
+        badge: '第 1 階段迭代',
+        date: '第 1 個月末上線（8/12）',
+        title: '整合第一階段餐飲與文創設計領域訪談排雷題庫',
+        desc: '完成前 6 位餐飲與文創創業者深度訪談與質性編碼（Coding），匯入真實選址、消防與原物料停損題庫。',
+        current: false
+      },
+      {
+        ver: 'V2.0',
+        badge: '第 2 階段迭代',
+        date: '第 2 個月末上線（9/11）',
+        title: '依據跨境電商、AI 數位工具訪談及首場沙龍擴充題組',
+        desc: '整合第 7–14 位電商與 AI 訪談新發現，並匯入第 3 郡 À Kàfe 首場「出海排雷焦點沙龍」30 人實戰洞察。',
+        current: false
+      },
+      {
+        ver: 'V3.0',
+        badge: '最終定版發布',
+        date: '10 月 10 日最終定版',
+        title: '完整收錄 20 位「成功 × 失敗」雙軌實證資料庫',
+        desc: '整合全數 20 位雙向受訪者實證數據與第 2 場共同空間沙龍精華，結合 5–10 萬廣告贊助精準推播。',
+        current: false
+      }
+    ];
+
+    // Tab 2: 資本架構選項（含人頭代持紅線）
+    const CAPITAL_STRUCTURES = [
+      {
+        id: 'wfoe',
+        label: '台灣獨資（100% 外資 WFOE）',
+        desc: '自主掌控股權與利潤匯出，須符合越南外資准入清單與 90 天資本實繳規定',
+        scoreAdj: 0,
+        isNominee: false
+      },
+      {
+        id: 'jv',
+        label: '台越正式合資（Joint Venture）',
+        desc: '借力在地執照與通路資源，須簽署雙語書面合資協議（SHA）與退場條款',
+        scoreAdj: -4,
+        isNominee: false
+      },
+      {
+        id: 'nominee',
+        label: '借用越南人頭代持',
+        desc: '借用越南友人名義登記公司或店面（極高危法律紅線）',
+        scoreAdj: -25,
+        isNominee: true
+      }
+    ];
+
+    // Tab 2: 團隊與語言準備度選項
+    const LANG_READINESS_OPTS = [
+      {
+        id: 'bilingual',
+        label: '具備雙語橋樑（留台校友／混血夥伴）',
+        desc: '團隊內有精通中越雙語之核心幹部或可靠雙母語顧問把關合約與管理',
+        scoreAdj: 4
+      },
+      {
+        id: 'mandarin_en',
+        label: '以中文／英文溝通搭配在地翻譯協助',
+        desc: '主要對接華語／英語圈，重要行政與合約委請雙語律師或譯者協助',
+        scoreAdj: 0
+      },
+      {
+        id: 'solo_none',
+        label: '獨自一人從零摸索（僅靠翻譯軟體）',
+        desc: '尚無固定雙語夥伴，日常溝通與合約判讀高度依賴即時翻譯機',
+        scoreAdj: -8
+      }
+    ];
+
+    // Tab 2: 五大核心維度（對應五軸雷達圖與雙向視角剖析卡）
+    const DIMENSIONS_5 = [
+      {
+        key: 'market',
+        name: '市場驗證',
+        radarLines: ['市場驗證', '與落差評估'],
+        twStory: '【在越台青踩坑實錄】「當初來胡志明市旅遊 5 天看到商場人潮就決定簽約開店，結果正式營運後才發現平日與週末人流差三倍，台灣熱銷品項在當地根本切不中主流價格帶，半年虧掉兩百萬停損。」',
+        vnAdvice: '【留台越南校友建議】「胡志明市年輕人喜歡嘗試新事物，但品牌忠誠度需要靠在地化建立。建議投入重資前先做 14–30 天快閃驗證，並請留台校友協助校準定價與產品規格。」',
+        doTip: '投入重資產裝修前，先於目標郡區進行 14–30 天快閃試賣（MVP），並邀請 5 位以上越南本地目標客群測試付費意願。',
+        dontTip: '絕對不要憑短期觀光印象或網路勵志報導，直接將台灣定價與商業模式 1:1 複製到越南市場。'
+      },
+      {
+        key: 'legal',
+        name: '法規合規',
+        radarLines: ['法規合規', '與股權安全'],
+        twStory: '【在越台青踩坑實錄】「身邊最痛的失敗案例都是『為了省麻煩找越南朋友掛名代持』，前兩年虧錢沒事，第三年店面一賺錢對方直接換鎖翻臉，因為法律上公司根本不是你的，訴訟求償無門。」',
+        vnAdvice: '【留台越南校友建議】「越南外資設立（IRC/ERC）、90 天 DICA 資本實繳以及餐飲消防（PCCC）查核非常嚴格。前期多花 1 個月找雙語律所走合法架構，反而是保護本金最划算的投資。」',
+        doTip: '出發前確認營業項目外資持股上限、90 天資本到位紅線與消防食安執照條件，合資必簽雙語書面退出條款。',
+        dontTip: '絕對不要採口頭約定「借用越南人頭代持」，也不要心存僥倖持旅遊簽證長期違法駐點營運。'
+      },
+      {
+        key: 'consumer',
+        name: '消費洞察',
+        radarLines: ['在地消費', '習慣洞察'],
+        twStory: '【在越台青踩坑實錄】「我們一開始把台灣文青長文案直接翻譯投廣告，結果觸及率極低；而且低估了越南電商高比例『貨到付款（COD）』的惡意拒收率，光逆向物流費就吃掉所有利潤。」',
+        vnAdvice: '【留台越南校友建議】「越南 Z 世代消費呈現高度社群導向與促銷敏感度，TikTok Shop 短影音直播與 Zalo 售前確認才是主流。產品必須在視覺與即時體驗上給足情緒價值。」',
+        doTip: '深入研究 Shopee、TikTok Shop 與 GrabFood 競品定價帶，並結合 Zalo 售前確認機制控管 COD 拒收風險。',
+        dontTip: '不要用台灣消費者的決策節奏套用越南市場，切忌直接機翻台灣行銷素材盲目燒錢投放廣告。'
+      },
+      {
+        key: 'team',
+        name: '跨文化管理',
+        radarLines: ['跨文化', '團隊管理'],
+        twStory: '【在越台青踩坑實錄】「第一年我用台灣『責任制拚績效』帶人，又在開會時直接點名指正員工，結果農曆年發完第 13 個月獎金後，開工直接一半員工集體離職，店面差點開天窗。」',
+        vnAdvice: '【留台越南校友建議】「越南員工非常重視『面子文化』與工作生活邊界，公開責罵是大忌；但他們非常喜歡規則透明、達標立刻給獎金的量化 KPI 制度，延攬留台校友當主管最能減少摩擦。」',
+        doTip: '建立公開透明的月度量化 KPI 獎懲制度，預先編列 23.5% 法定保費與第 13 個月獎金，並規劃春節前後人力備援。',
+        dontTip: '避免在眾人面前大聲指責越南員工，也不要只看表面月薪而忽略雇主法定社保與春節轉職潮成本。'
+      },
+      {
+        key: 'resilience',
+        name: '心理韌性',
+        radarLines: ['心理韌性', '與停損機制'],
+        twStory: '【在越台青踩坑實錄】「落地第 7 個月現金流吃緊的深夜，真的會無數次自我懷疑『為什麼要來越南吃苦、不待在台灣就好？』當初沒有事先劃定停損線，差點把在台灣存的積蓄全部賠光。」',
+        vnAdvice: '【留台越南校友建議】「創業是一場馬拉松，把日常重複性的多語溝通、庫存盤點交給 AI 與雲端工具，創辦人才能保留精力做關鍵決策，並多參與在地台越社群互相支援。」',
+        doTip: '出發前白紙黑字寫下「財務停損金額與時間底線」，備妥 12 個月週轉預備金並導入輕量 AI 工具減輕盯場負荷。',
+        dontTip: '不要在沒有退場機制的情況下 All-in 全部身家，也不要孤軍奮戰、拒絕與胡志明市在地前輩交流排雷。'
+      }
+    ];
+
+    // Tab 2: 10 題五軸情境避雷測驗（每軸 2 題）
+    const QUIZ_QUESTIONS = [
+      {
+        id: 'q1', dim: 'market', dimName: '市場驗證', tag: 'Q1 / 10・前期市場驗證深度',
+        title: '在正式投入開辦資金前，你對胡志明市目標商圈的市場缺口驗證進行到哪個階段？',
+        context: '田調核心題：「實際到越南落地創業後，哪一件事跟你一開始預想的落差最大？」',
+        options: [
+          { code: 'A', text: '僅看過網路報導、短影音或聽親友分享越南充滿機會，尚未實地考察。', score: 20 },
+          { code: 'B', text: '曾赴胡志明市短期旅遊或參訪 3–5 天，對熱鬧商圈有印象但未拆解競品數據。', score: 45 },
+          { code: 'C', text: '已實地蹲點目標郡區比較平假日人流與租金，並請教過在越前輩意見。', score: 75 },
+          { code: 'D', text: '已完成 14–30 天在地快閃試賣或預售測試（MVP），驗證當地客群實際付費意願。', score: 95 }
+        ]
+      },
+      {
+        id: 'q2', dim: 'market', dimName: '市場驗證', tag: 'Q2 / 10・在地供應鏈與備援方案',
+        title: '針對核心原物料或商品的跨境進口檢驗、關稅成本與越南在地替代供應商，你的準備度是？',
+        context: '進口查驗卡關或單一供應商臨時漲價斷貨，常是台灣品牌落地初期毛利失控的主因。',
+        options: [
+          { code: 'A', text: '打算全部從台灣採購再空運或寄送過去，尚未試算正式清關與檢驗費用。', score: 20 },
+          { code: 'B', text: '知道進口繁瑣，預計到越南當地批發市場再邊找邊買，尚未接觸實際廠商。', score: 45 },
+          { code: 'C', text: '已試算正式報關物流成本，並找到至少 1 家越南在地合作供應商。', score: 75 },
+          { code: 'D', text: '已建立「在地為主＋進口為輔」供應鏈，並完成 2 家以上備援廠商小批試單驗貨。', score: 95 }
+        ]
+      },
+      {
+        id: 'q3', dim: 'legal', dimName: '法規合規', tag: 'Q3 / 10・外資證照與資本到位紅線',
+        title: '針對越南外資設立所需的 IRC（投資登記證）、ERC（企業登記證）與 90 天資本實繳規定，你的掌握度是？',
+        context: '外資公司須經由 DICA 專戶於法定期限內完成資本額到位，逾期將引發行政罰則與匯出障礙。',
+        options: [
+          { code: 'A', text: '不清楚 IRC／ERC 差別，以為跟台灣開公司一樣一兩週就能辦妥開業。', score: 15 },
+          { code: 'B', text: '大致知道外資門檻較高，但尚未核對所屬營業項目的外資持股上限與特許證照。', score: 45 },
+          { code: 'C', text: '已諮詢台越雙語會計師或顧問，確認產業准入條件與預估申請期程。', score: 75 },
+          { code: 'D', text: '已完成法規前置檢核，明確規劃 DICA 資本匯入時程、消防（PCCC）與稅務申報架構。', score: 95 }
+        ]
+      },
+      {
+        id: 'q4', dim: 'legal', dimName: '法規合規', tag: 'Q4 / 10・合約保障與合規底線',
+        title: '面對商業租約、裝修工程或合資合作時，你如何防範「口頭承諾無效」與「人頭代持」風險？',
+        context: '田調關鍵題：「來越南創業前『一定要做的一件事』，以及『一定不要做的一件事』是什麼？」',
+        options: [
+          { code: 'A', text: '為求快速開業，願意考慮先借用越南友人名義登記或口頭約定分潤比例。', score: 10 },
+          { code: 'B', text: '簽訂簡單雙語合約即可，主要靠彼此交情與信任維持合作。', score: 45 },
+          { code: 'C', text: '堅持不碰人頭代持，重要店面租約與合資協議皆安排正式公證與律師審閱。', score: 78 },
+          { code: 'D', text: '100% 合法架構＋雙語書面合資退出條款（SHA）＋工程分階段驗收撥款機制。', score: 95 }
+        ]
+      },
+      {
+        id: 'q5', dim: 'consumer', dimName: '消費洞察', tag: 'Q5 / 10・在地消費習慣與價格帶',
+        title: '對於越南本地消費者的真實消費習慣、決策模式與價格敏感度，你的掌握程度如何？',
+        context: '胡志明市消費者對社群口碑、促銷節奏與性價比的敏感度與台灣市場有顯著差異。',
+        options: [
+          { code: 'A', text: '打算將台灣熱銷規格、口味與定價直接搬到越南，主打「台灣品牌光環」。', score: 20 },
+          { code: 'B', text: '知道越南平均所得較低，預計先打折降價切入，其餘等開業後再慢慢摸索。', score: 45 },
+          { code: 'C', text: '已系統分析當地主流平台（TikTok、Shopee、Grab）競品定價帶與促銷節奏。', score: 75 },
+          { code: 'D', text: '已邀請越南本地客群與留台越南校友進行雙向訪談與試用，完成在地化定價模型。', score: 95 }
+        ]
+      },
+      {
+        id: 'q6', dim: 'consumer', dimName: '消費洞察', tag: 'Q6 / 10・在地行銷通路與 COD 風控',
+        title: '在越南數位獲客與交易習慣（如 Zalo 溝通、TikTok 直播、COD 貨到付款）上，你的營運規劃是？',
+        context: '越南電商仍具高比例 COD 貨到付款習慣，若缺乏售前確認與在地化內容極易產生退貨損耗。',
+        options: [
+          { code: 'A', text: '沿用台灣 Facebook 長圖文與官網刷卡結帳模式，直接翻譯文案投放廣告。', score: 20 },
+          { code: 'B', text: '知道大家都在用 Zalo 與 TikTok，但尚未建立在地短影音內容與客服確認流程。', score: 45 },
+          { code: 'C', text: '已規劃 Zalo OA 客服與在地 KOC 短影音合作，並預留 COD 退貨風險準備金。', score: 75 },
+          { code: 'D', text: '已建立「在地短影音獲客＋Zalo 自動化售前確認＋數據追蹤」完整轉換漏斗。', score: 95 }
+        ]
+      },
+      {
+        id: 'q7', dim: 'team', dimName: '跨文化管理', tag: 'Q7 / 10・薪酬結構與隱性人事成本',
+        title: '你是否已將「23.5% 雇主法定保險與工會費」以及「農曆年前第 13 個月獎金與年後轉職潮」納入預算？',
+        context: '許多創業者只看越南表面底薪，卻忽略雇主法定負擔與 Tết（春節）後的集體人力斷層。',
+        options: [
+          { code: 'A', text: '只以網路上看到的月薪估算成本，不清楚雇主社保比例與第 13 個月獎金慣例。', score: 15 },
+          { code: 'B', text: '聽說過年要發年終獎金，但尚未將 23.5% 法定雇主負擔計入財務現金流模型。', score: 45 },
+          { code: 'C', text: '已將完整人事成本（約本薪 1.32 倍）納入預算，並規劃春節前後交接期。', score: 75 },
+          { code: 'D', text: '財務模型已精準涵蓋法定保費與獎金月攤提，並設計開工留任激勵與彈性人力備援。', score: 95 }
+        ]
+      },
+      {
+        id: 'q8', dim: 'team', dimName: '跨文化管理', tag: 'Q8 / 10・溝通文化與 KPI 獎懲節奏',
+        title: '在帶領越南本地團隊時，你對溝通習慣、面子文化與績效獎懲（KPI）的制度設計準備是？',
+        context: '留台越南校友指出：越南團隊偏好規則透明的量化月獎金，但極度反感公開責罵與模糊責任制。',
+        options: [
+          { code: 'A', text: '認為台灣老闆願意多給薪水，員工就會自動配合高強度責任制加班。', score: 20 },
+          { code: 'B', text: '尚未建立書面制度，打算自己駐點盯場、用翻譯軟體邊做邊教。', score: 45 },
+          { code: 'C', text: '已擬定基礎越文 SOP 與透明獎金辦法，並採「公開表揚、私下指導」溝通原則。', score: 75 },
+          { code: 'D', text: '已建立數位化月度 KPI 獎懲儀表板，並配置留台越南校友擔任關鍵中階管理橋樑。', score: 95 }
+        ]
+      },
+      {
+        id: 'q9', dim: 'resilience', dimName: '心理韌性', tag: 'Q9 / 10・AI 數位工具減壓與遠距掌控',
+        title: '針對日常營運繁瑣痛點（門市 POS、庫存水位預測、跨語 SOP），你的 AI 與數位工具導入規劃是？',
+        context: '善用在地雲端 POS 與生成式 AI 工具，能大幅降低創辦人肉身盯場的身心耗損。',
+        options: [
+          { code: 'A', text: '初期打算全靠紙本單據、人工盤點與聊天群組回報，暫不導入數位系統。', score: 20 },
+          { code: 'B', text: '僅用免費 AI 做零星越文翻譯，營運帳務與庫存水位仍靠手動統計。', score: 50 },
+          { code: 'C', text: '已評估越南在地雲端 POS（如 KiotViet/iPOS），並用 AI 建立雙語員工培訓 SOP。', score: 78 },
+          { code: 'D', text: '已整合雲端 POS、自動化庫存預警與 KPI 看板，讓營運數據即時可視化。', score: 95 }
+        ]
+      },
+      {
+        id: 'q10', dim: 'resilience', dimName: '心理韌性', tag: 'Q10 / 10・虧損停損底線與低潮心理安全網',
+        title: '若落地半年面臨虧損、深夜自我懷疑「為什麼要來越南吃苦、不待在台灣就好」時，你的停損與支持機制是？',
+        context: '訪綱核心題：「如果現在有台灣朋友說想來越南創業，你第一個會反問他的問題是什麼？」',
+        options: [
+          { code: 'A', text: '打算壓上大部分積蓄破釜沉舟，沒設具體停損線，遇到困難再咬牙硬撐。', score: 15 },
+          { code: 'B', text: '有留約 3 個月個人生活費，但在胡志明市幾乎沒有可深談求助的商業人脈。', score: 45 },
+          { code: 'C', text: '已設定明確財務停損額度與半年週轉預備金，並建立定期覆盤與親友回報機制。', score: 75 },
+          { code: 'D', text: '備妥 12 個月週轉緩衝與階段退場指標，且已連結胡志明市台青與台越交流社群。', score: 95 }
+        ]
+      }
+    ];
+
+    // Tab 3: 胡志明市三大調研商業熱區
+    const HCMC_DISTRICTS = {
+      d1: {
+        id: 'd1',
+        name: '第 1 郡（Quận 1）',
+        subtitle: '國際商務與品牌旗艦核心・跨國企業與高端消費一級戰區',
+        rentLevel: 95,
+        rentDesc: '極高（商業精華帶租金與押金門檻直逼台北信義／東區，裝修空窗期短）',
+        audience: '跨國外派主管、越南高收入白領、國際商務客與觀光客群。',
+        bestFor: ['跨國 B2B / AI 數位服務據點', '高單價精品餐飲與品牌形象旗艦店', '跨境電商與行銷代理商辦公室'],
+        pitfalls: [
+          '店面押金高（常需押 3 付 1～3），若前 3 個月轉換率未達標，現金流極快見底。',
+          '尖峰時段交通高度壅塞、臨停困難，對外送騎手取餐動線與客流影響顯著。'
+        ],
+        salonNote: '第 2 場沙龍預定帶（2027/10/01–10/02）：胡志明市核心商業區「共同工作空間（Co-working Space，如 Toong / Dreamplex）」，獨立主辦跨國數位協作與經營突圍沙龍。'
+      },
+      d3: {
+        id: 'd3',
+        name: '第 3 郡（Quận 3）',
+        subtitle: '文創老屋活化與生活風格聚落・獨立咖啡餐飲一級試驗場',
+        rentLevel: 72,
+        rentDesc: '中高（較第 1 郡具性價比，但熱門巷弄法式老屋搶手、裝修隱藏工程多）',
+        audience: '胡志明市 Z 世代年輕中產、自由工作者、設計師與重視生活風格體驗之本地客群。',
+        bestFor: ['特色手搖飲與複合式精緻餐飲（F&B）', '文創設計、選物與法式老屋空間創生', '自媒體工作室與品牌社群據點'],
+        pitfalls: [
+          '老屋水電管線老化、隔音與滲水問題多，裝修追加預算往往超出初估 25%–40%。',
+          '咖啡與餐飲同業密度極高，若缺乏鮮明品牌記憶點與在地社群營運，極易在半年內被淘汰。'
+        ],
+        salonNote: '📍 第 1 場沙龍指定據點（2027/09/11）：胡志明市第 3 郡「À Kàfe - Võ Thị Sáu｜Coffee & Bubble Tea Shop」，獨立主辦約 30 人「台越青年出海排雷焦點沙龍」。'
+      },
+      d7: {
+        id: 'd7',
+        name: '第 7 郡（Quận 7・富美興）',
+        subtitle: '富美興台商生活圈與連鎖餐飲測試場・成熟國際化新市鎮',
+        rentLevel: 64,
+        rentDesc: '中（街廓寬敞、屋況新穎且坪數大，適合家庭型與穩健營運測試）',
+        audience: '在越台商／韓商家庭、國際學校家長、中高收入本地新富階層。',
+        bestFor: ['台式精緻餐飲與連鎖品牌初期口味測試場', '台商供應鏈 B2B 服務與顧問', '跨境電商營運後勤與倉儲辦公'],
+        pitfalls: [
+          '消費結構高度集中於台韓外籍社群，若目標是打入「全越南本地大眾市場」，容易陷入華人同溫層盲區。',
+          '與第 1、3 郡隔橋相望，上下班尖峰時段跨區通勤塞車嚴重。'
+        ],
+        salonNote: '第 1 週核心場勘與訪談區：深入走訪富美興台商聚落，訪談在此深耕之在越台青與連鎖餐飲創業者。'
+      }
+    };
+
+    // Tab 3: 五大篇章實戰指南（支援產業＋痛點雙篩選＋成功×失敗雙軌對照）
+    const GUIDE_CHAPTERS = [
+      {
+        num: '第一篇',
+        title: '破除濾鏡——出發前想像與落地後的殘酷落差',
+        industries: ['fb', 'creative', 'ecommerce', 'ai'],
+        topics: ['市場驗證', '心理韌性'],
+        words: '約 5,500 字',
+        summary: '還原胡志明市真實商業節奏與前期市場驗證（MVP）方法，打破「東南亞遍地黃金、隨便做都會賺」的單一成功學濾鏡。',
+        successCase: '【現行成功模式】餐飲創業者先以第 3 郡 Pop-up 快閃攤位測試 21 天，收集超過 400 份越南本地顧客甜度與價格回饋後才簽訂正式店面租約，首月即達成損益兩平。',
+        failureCase: '【過往失敗停損案例】某文創品牌主僅憑觀光 4 天印象便砸下 300 萬台幣承租精華店面，忽略平日白領人流與冷氣電費高昂，苦撐 8 個月後認賠退場。'
+      },
+      {
+        num: '第二篇',
+        title: '制度暗礁——外資設立、合資合約與財稅合規排雷',
+        industries: ['fb', 'creative', 'ecommerce', 'ai'],
+        topics: ['法規合規'],
+        words: '約 6,000 字',
+        summary: '系統拆解越南外資雙證（IRC/ERC）、90 天 DICA 資本實繳紅線、台越合資協議（SHA）與餐飲消防（PCCC）審查實務。',
+        successCase: '【現行成功模式】台越合資團隊在公司設立前即委託雙語律所簽署英文／越文雙語合資協議，明訂重大財務雙簽制與三年股權回購公式，營運四年零股權爭議。',
+        failureCase: '【過往失敗停損案例】創業者為求快速開店借用越南友人名義掛名登記（人頭代持），第二年店面獲利後雙方理念不合，對方直接更換大門鎖頭並主張全數產權，創業者血本無歸。'
+      },
+      {
+        num: '第三篇',
+        title: '讀懂越南——在地 Z 世代消費習慣與供應鏈真相',
+        industries: ['fb', 'creative', 'ecommerce'],
+        topics: ['消費洞察', '市場驗證'],
+        words: '約 5,500 字',
+        summary: '由 6 位留台越南校友與 4 位混血創業者進行雙向視角拆解，還原越南年輕世代消費心理、TikTok 直播生態與 COD 貨到付款風控。',
+        successCase: '【現行成功模式】跨境電商團隊延攬留台越南校友擔任內容總監，以在地生活痛點拍攝 60 秒短影音搭配 Zalo 售前確認，將 COD 拒收率從 28% 壓低至 7% 以內。',
+        failureCase: '【過往失敗停損案例】某生活品牌直接把台灣官網長文案機翻成越文投放廣告，且未建立在地替代供應鏈、全靠台灣空運補貨，最終因物流與廣告雙重虧損收攤。'
+      },
+      {
+        num: '第四篇',
+        title: '跨文化帶人——越南團隊管理、KPI 與春節離職潮應對',
+        industries: ['fb', 'creative', 'ecommerce', 'ai'],
+        topics: ['跨文化管理'],
+        words: '約 5,500 字',
+        summary: '揭開 23.5% 雇主法定保費與工會費結構，建立符合越南「面子文化」的透明月度 KPI 獎懲制度與農曆春節（Tết）留才對策。',
+        successCase: '【現行成功模式】連鎖門市導入透明日結與月度 KPI 獎金看板，採「公開表揚、私下指導」溝通，並配置留台越南校友擔任店長，年後留任率高達 92%。',
+        failureCase: '【過往失敗停損案例】創業者沿用台灣「高壓檢討、免費責任制」帶人，且未編列第 13 個月獎金與法定保費預算，春節過後核心員工集體離職導致門市被迫暫停營業。'
+      },
+      {
+        num: '第五篇',
+        title: 'AI 賦能與台越協作——中小企業數位轉型與跨國人才對接',
+        industries: ['ai', 'ecommerce', 'fb'],
+        topics: ['跨文化管理', '心理韌性'],
+        words: '約 5,500 字',
+        summary: '聚焦生成式 AI 與輕量數位工具在餐飲 POS、倉儲庫存水位預測、多語 SOP 生成的落地實踐，以及與越南本土 IT 工程師的高效協作模式。',
+        successCase: '【現行成功模式】新創團隊透過生成式 AI 建立越中雙語圖文 SOP，並串接越南在地雲端 POS 與庫存安全水位自動預警，讓台灣創辦人遠距即可精準掌握門市損耗。',
+        failureCase: '【過往失敗停損案例】團隊在沒有明確書面 PRD 規格書的情況下直接發包給越南工程團隊，雙方對功能驗收認知落差巨大，專案延宕半年超支後被迫中止開發。'
+      }
+    ];
+
+    // Tab 4: 6 張「台灣人以為 vs 越南在地真相」互動翻轉卡
+    const MYTH_CARDS = [
+      {
+        id: 'm1',
+        num: 'CARD 01',
+        tag: '用人成本真相',
+        front: '「越南薪資比台灣低很多，所以去越南請人創業一定很便宜？」',
+        back: '【越南在地真相】單看底薪會嚴重低估！雇主須另負擔 21.5% 法定強制保險（社保 17.5%＋醫保 3%＋失業險 1%）＋ 2% 工會費（合計 23.5%），加上慣例第 13 個月獎金月攤提，真實成本約為期望月薪的 1.32 倍；且胡志明優質雙語／AI 人才起薪已直逼台灣。'
+      },
+      {
+        id: 'm2',
+        num: 'CARD 02',
+        tag: '消費習慣真相',
+        front: '「台灣品牌在東南亞有天然光環，直接把台灣熱銷品搬過去就能賣高價？」',
+        back: '【越南在地真相】胡志明市 Z 世代資訊極度同步，日、韓、泰與越南本土新創品牌競爭極度白熱化。「台灣」標籤或許能帶來初期打卡好奇，但若未針對當地甜度口味、性價比與社群體驗重新校準，熱度退去後極易門可羅雀。'
+      },
+      {
+        id: 'm3',
+        num: 'CARD 03',
+        tag: '法規與代持真相',
+        front: '「外資設立太麻煩，先找信得過的越南朋友掛名代持開公司最省事？」',
+        back: '【越南在地真相】這是胡志明市台商圈公認的「毀滅級頭號地雷」！越南法律不保障規避外資審查的借名代持協議。初期虧錢相安無事，一旦門市獲利或理念不合，營業執照、租約與帳戶全在對方名下，極可能一夜歸零且無法透過訴訟追回。'
+      },
+      {
+        id: 'm4',
+        num: 'CARD 04',
+        tag: '員工獎懲節奏真相',
+        front: '「越南員工比較隨性，不喜歡把規則與 KPI 獎懲制度講得太清楚？」',
+        back: '【越南在地真相】留台越南校友指出事實恰恰相反！越南年輕員工非常喜歡「規則透明、權責分明、達標立刻給獎金」的量化月度 KPI 制度。他們排斥的是模糊的「台灣式免費責任制」以及在眾人面前傷及面子的情緒化責罵。'
+      },
+      {
+        id: 'm5',
+        num: 'CARD 05',
+        tag: '合資與合約信任真相',
+        front: '「只要跟越南廠商或房東簽完正式合約，就代表合作完全定案不會變動？」',
+        back: '【越南在地真相】在越南商業文化中，「簽約只是建立關係的起點」。實務上仍可能面臨工期延宕或認知落差。除了合約公證與嚴格「分階段驗收撥款」外，透過 Zalo 高頻走動互動建立人際信任（Quan hệ）才是履約關鍵。'
+      },
+      {
+        id: 'm6',
+        num: 'CARD 06',
+        tag: '數位生態與支付真相',
+        front: '「越南是開發中國家，數位化與行動支付普及度應該落後台灣？」',
+        back: '【越南在地真相】胡志明市呈現「跳躍式數位發展」！從路邊河粉攤到大型商場全面普及 VietQR 即時掃碼轉帳，Zalo 商業滲透率極高，TikTok Shop 直播帶貨節奏甚至比台灣更兇猛，用舊思維做行銷完全跟不上。'
+      }
+    ];
+
+    // Tab 4: 6 支短影音企劃（EP1–EP6）
+    const REELS_SERIES = [
+      { ep: 'EP1', week: '第 3 週', title: '《出發前與落地後，越南跟我想像差最多的一件事》', angle: '在越餐飲與文創台青', value: '破除濾鏡，還原真實市場節奏與前期驗證落差' },
+      { ep: 'EP2', week: '第 5 週', title: '《來越南創業前「一定要做」與「絕對不要做」的兩件事》', angle: '資深在越台商與合資創業者', value: '拆解外資股權、人頭代持禁區與合約紅線' },
+      { ep: 'EP3', week: '第 7 週', title: '《留台越南校友老實說：台灣品牌在越南最常犯的水土不服》', angle: '曾來台交換／留學之越南創業者', value: '以雙向文化視角點出台灣管理與行銷盲點' },
+      { ep: 'EP4', week: '第 9 週', title: '《越南本地人的真實消費習慣，跟台灣人想的完全不一樣》', angle: '跨境電商與連鎖餐飲品牌主', value: '解析越南年輕世代消費心理與定價策略' },
+      { ep: 'EP5', week: '第 10 週', title: '《深夜自我懷疑：為什麼要來越南吃苦、不待在台灣就好？》', angle: '排雷沙龍與受訪創業者群', value: '真實呈現創業低潮、虧損復盤與心理韌性' },
+      { ep: 'EP6', week: '第 12 週', title: '《如果朋友現在說要來越南創業，我第一個會反問他什麼？》', angle: '20 位受訪者金句精華合輯', value: '強導流至《AI 避雷檢測互動網頁》V3.0（搭配 5–10 萬廣告推播）' }
+    ];
+
+    // Tab 4: 完整 14 題半結構式銳利訪綱（含前測問卷分類）
+    const INTERVIEW_MODULES = [
+      {
+        id: 'pre',
+        label: '訪談前測問卷',
+        title: '訪談前測線上問卷（受訪前填寫，精準過濾與節省現場時間）',
+        probing: '前測目的：在 60 分鐘現場訪談前先掌握受訪者資本結構、數位工具現況與「過往失敗／停損專案次數」，讓現場時間 100% 聚焦深度追問。',
+        items: [
+          '【前測項目 1】所屬四大調研產業別（精緻餐飲／文創空間／跨境電商／生成式 AI 數位工具）',
+          '【前測項目 2】在越實際營運年資（篩選門檻：須具備 1 年以上實際營運或管理經驗）與團隊規模',
+          '【前測項目 3】資本架構類型（100% 外資獨資／台越合資／其他合規架構）',
+          '【前測項目 4】核心數位與生成式 AI 工具使用現況（POS、進銷存、Zalo OA、多語 AI 等）',
+          '【前測項目 5】過往創業失敗、停損收攤或重大商業模式轉型專案次數（雙軌實證樣本標記）'
+        ]
+      },
+      {
+        id: 'mod1',
+        label: '模組一：市場驗證落差',
+        title: '模組一：出海契機與市場驗證落差（Q1 – Q3）',
+        probing: '業務 Probing 追問重点：對比「出發前假設」與「落地後真實數據」，追問促使商業模式修正的第一個衝擊事件。',
+        items: [
+          '1. 當初是什麼契機與市場缺口，讓你決定在越南啟動目前的事業？',
+          '2. 在正式投入資金與資源前，你做過哪些市場驗證？',
+          '3. 實際到越南落地創業後，哪一件事跟你一開始預想的落差最大？'
+        ]
+      },
+      {
+        id: 'mod2',
+        label: '模組二：法規與落地暗礁',
+        title: '模組二：制度、法規與落地暗礁（排雷篇）（Q4 – Q5）',
+        probing: '業務 Probing 追問重点：追問外資設立、股權代持禁區、消防或稅務卡關所耗費的時間與學費，提煉可執行的紅線清單。',
+        items: [
+          '4. 在公司設立、外資股權結構、執照申請或稅務合規上，曾遇過哪些行政門檻或灰色地帶？',
+          '5. 給準備來越南創業的台灣青年：來越南前「一定要做的一件事」，以及「一定不要做的一件事」分別是什麼？'
+        ]
+      },
+      {
+        id: 'mod3',
+        label: '模組三：管理與消費習慣',
+        title: '模組三：跨文化團隊管理、在地供應鏈與消費習慣（Q6 – Q8）',
+        probing: '業務 Probing 追問重点：拆解越南 Z 世代消費敏感度、員工薪酬獎懲制度調整以及供應鏈人際信任建立規則。',
+        items: [
+          '6. 越南當地消費者的真實消費習慣、決策模式與價格敏感度，與台灣市場有何關鍵差異？',
+          '7. 在招募與帶領越南本地團隊時，雙方在溝通習慣、績效獎懲與工作節奏上最常發生什麼摩擦？你如何調整管理制度？',
+          '8. 在建立在地供應鏈與開發客戶時，越南商業社會最看重的信任建立規則是什麼？'
+        ]
+      },
+      {
+        id: 'mod4',
+        label: '模組四：失敗深挖與韌性',
+        title: '模組四：創業危機、過往失敗復盤與心理韌性（Q9 – Q12）',
+        probing: '業務 Probing 追問重点：打破倖存者偏差的核心模組！深挖受訪者「走到目前穩定事業之前曾失敗、停損或收攤的專案」，還原虧損規模與心理轉念。',
+        items: [
+          '9. （過往失敗案例深挖）在走到目前穩定的事業之前，你過去曾有過哪些失敗、停損或最終收攤的創業與專案案例？當時導致失敗的關鍵誤判為何、虧損了多少時間與資金，又如何影響你後續修正商業模式？',
+          '10. 如果時間重來、再給你一次機會，你絕對不會做什麼決定？',
+          '11. 在低潮或卡關時，是否曾自我懷疑「為什麼要來越南創業、不待在台灣就好」？當時的原因與轉念關鍵是什麼？',
+          '12. 如果現在有台灣朋友說想來越南創業，你第一個會反問他的問題是什麼？'
+        ]
+      },
+      {
+        id: 'mod5',
+        label: '族群分流題',
+        title: '族群分流題（在越台青 vs 留台越南校友＆混血創業者）（Q13 – Q14）',
+        probing: '業務 Probing 追問重点：進行三角交叉驗證（Triangulation），補齊純台灣人單向視角盲區與台越數位／AI 人才協作模式。',
+        items: [
+          '13. （針對在越台青）你認為台灣人才或品牌在越南市場最具不可替代性的軟實力優勢是什麼？',
+          '14. （針對留台越南校友＆混血創業者）當初在台留學／交換的經驗如何轉化為你在越南的商業競爭力？以你的雙向視角來看，台灣品牌在越最常犯的「水土不服」錯誤，以及台越數位／AI 人才最高效的協作模式為何？'
+        ]
+      }
+    ];
+
+    // Tab 5 工具 1：10 項台越公司設立與法規避雷檢核表
+    const LEGAL_CHECKLIST = [
+      {
+        group: '一、股權架構與人頭代持防線',
+        items: [
+          { id: 'c1', text: '核對所屬營業項目（VSIC／WTO CPC 代碼）之外資持股比例上限與條件准入規定', redLine: true, note: '餐飲、電商、顧問與教育業外資開放程度不同，簽約前必先確認。' },
+          { id: 'c2', text: '嚴守合規底線：絕不採「借用越南人頭代持」或口頭借名登記方式設立公司或門市', redLine: true, note: '頭號毀滅性紅線！越南法律不保護規避審查的借名代持協議。' },
+          { id: 'c3', text: '確認公司法定代表人（Legal Representative）常駐越南規定與銀行印鑑簽章權限控管', redLine: false, note: '越南公司至少須有一名法定代表人常駐越南境內並承擔法定責任。' }
+        ]
+      },
+      {
+        group: '二、外資雙證與資本到位紅線',
+        items: [
+          { id: 'c4', text: '規劃投資登記證（IRC）與企業登記證（ERC）申請期程（預留 45–90 天行政審查期）', redLine: false, note: '切勿在尚未取得執照前即承租無免租期之高租金店面。' },
+          { id: 'c5', text: '開立外資直接投資帳戶（DICA）並嚴守「ERC 核發後 90 天內資本全數實繳」紅線', redLine: true, note: '逾期未足額到位將遭行政罰款，且未來盈餘將無法合法匯出越南。' },
+          { id: 'c6', text: '承租商用店面／老屋前，完成房東產權（紅本）、消防（PCCC）與食安特許執照前置審查', redLine: true, note: '胡志明市近年消防（PCCC）查核極為嚴格，不合規建築將無法核發開業許可。' },
+          { id: 'c7', text: '辦理外籍創辦人／台籍幹部之工作證（Work Permit）或免辦認定與暫住證（TRC）', redLine: false, note: '避免持商務或觀光簽證長期駐店營運遭勞動稽查處罰。' }
+        ]
+      },
+      {
+        group: '三、合資退場與稅務知識產權保護',
+        items: [
+          { id: 'c8', text: '台越合資必簽雙語書面合資協議（SHA），明訂表決權、財務雙簽與拆夥退出回購機制', redLine: true, note: '將退場估值公式白紙黑字寫入協議，避免獲利後發生股權僵局。' },
+          { id: 'c9', text: '建立越南電子紅發票（VAT e-Invoice）開立系統與月度／季度稅務會計申報行事曆', redLine: false, note: '越南全面實施電子紅發票，進銷項發票合規直接影響年度查稅風險。' },
+          { id: 'c10', text: '完成租約公證與越南商標在地註冊送件，防範品牌爆紅後遭惡意搶註或提前解約', redLine: false, note: '越南商標採「先申請先保護原則」，建議落地前即同步送件申請。' }
+        ]
+      }
+    ];
+
+    // Tab 5 工具 3：中小企業出海 AI 與數位工具導入清單
+    const AI_TOOLS_LIST = [
+      {
+        cat: '智慧餐飲 POS／倉儲庫存',
+        name: 'KiotViet / iPOS.vn（越南在地雲端 POS 系統）',
+        badge: '越南高市佔',
+        scene: '手搖飲、連鎖餐飲與零售門市日常收銀、外送平台接單與總部遠距查帳。',
+        localFit: '深度整合越南 VietQR 即時銀行轉帳核銷、GrabFood / ShopeeFood 訂單與當地電子紅發票（e-Invoice），遠比強行把台灣 POS 搬去越南順手。',
+        pitfall: '避坑提醒：務必設定收銀員分級權限與異常折讓警報，防範門市現金與原物料損耗漏洞。'
+      },
+      {
+        cat: '智慧餐飲 POS／倉儲庫存',
+        name: 'MISA AMIS ＋ 倉儲庫存水位預測看板',
+        badge: '進銷存與庫存預測',
+        scene: '多門市餐飲中央廚房、跨境電商在地倉儲之原物料安全水位預測與補貨管理。',
+        localFit: 'MISA 為越南普及率極高之企業財會與進銷存套件，容易與當地會計師報稅銜接；搭配 Python／AI 歷史銷量模型可預測雨季與節慶備貨量。',
+        pitfall: '避坑提醒：務必將進口原料「海關清關前置天數」納入安全庫存公式，避免斷料停賣。'
+      },
+      {
+        cat: '跨國多語溝通與行銷生成',
+        name: 'Zalo OA（官方帳號）＋ 生成式 AI 多語自動客服',
+        badge: '越南必備生態',
+        scene: '本地顧客預約、電商 COD 出貨前自動訊息確認、售後常見問題即時雙語回應。',
+        localFit: 'Zalo 在越南等同台灣的 LINE，幾乎所有供應商對帳、物流聯繫與客訴都在 Zalo 上進行。',
+        pitfall: '避坑提醒：用 AI 生成越文話術後，務必請留台越南夥伴潤飾口語語氣，避免生硬機翻降低信任感。'
+      },
+      {
+        cat: '跨國多語溝通與行銷生成',
+        name: '生成式 AI 雙語圖文 SOP ＆ 短影音腳本工作流（ChatGPT / Claude + CapCut）',
+        badge: '多語訓練與行銷',
+        scene: '快速將台灣總部食安／服務 SOP 轉化為越文圖文手冊，並高頻產出 TikTok / Reels 短影音腳本。',
+        localFit: '大幅縮短新進越南員工培訓週期，並能針對越南 Z 世代流行語境快速測試多組短影音開場鉤子。',
+        pitfall: '避坑提醒：行銷素材切忌直接翻譯台灣長文案，應聚焦前 3 秒視覺痛點與在地真實情境。'
+      },
+      {
+        cat: '團隊 KPI 績效追蹤',
+        name: 'Lark（飛書國際版）跨國任務審批與月度 KPI 儀表板',
+        badge: '即時翻譯協作',
+        scene: '台灣總部、胡志明市門市團隊與越南本土 IT 工程師之間的專案進度與月度 KPI 績效追蹤。',
+        localFit: '內建聊天與文件即時中越互譯功能，能把零散在聊天群組的口頭交辦轉化為可追蹤的量化指標。',
+        pitfall: '避坑提醒：將「月度 KPI 達成率與對應獎金試算」公開透明化，最能激發越南年輕團隊執行力。'
+      },
+      {
+        cat: '團隊 KPI 績效追蹤',
+        name: 'Notion 跨國知識庫 ＋ 敏捷開發需求規格書（PRD）模板',
+        badge: '台越 IT 協作',
+        scene: '與越南優秀 IT／AI 青年工程師協作開發系統時，對齊功能規格、驗收標準與迭代時程。',
+        localFit: '透過結構化雙語規格表與流程圖，消除台越工程團隊在需求理解上的文化與語言模糊地帶。',
+        pitfall: '避坑提醒：切忌只用口頭描述需求就發包開發，務必建立每週 Demo 驗收節點。'
+      }
+    ];
+
+    /* =========================================================================
+       2. 全域狀態管理 (Application State)
+    ========================================================================= */
+    const appState = {
+      activeTab: 'overview',
+      // Tab 1 矩陣探索器狀態（mode: 'cell' | 'sector'）
+      matrixSelection: {
+        mode: 'cell',
+        sectorId: 'fb',
+        groupId: 'vn'
+      },
+      // Tab 2 避雷檢測狀態
+      profile: {
+        sectorId: null,
+        capitalId: null,
+        langId: null
+      },
+      quizIndex: 0,
+      quizAnswers: {},
+      lastReport: null,
+      autoNextTimer: null,
+      // Tab 3 指南與熱區狀態
+      selectedHcmcDistrict: 'd3',
+      guideIndustryFilter: 'all',
+      guideTopicFilter: 'all',
+      openGuideIndex: 0,
+      // Tab 4 失敗復盤與訪綱狀態
+      flippedMyths: {},
+      interviewFilter: 'all',
+      // Tab 5 工具附錄包狀態
+      activeToolkitSubtab: 'checklist',
+      checkedLegalItems: {},
+      aiToolFilter: '全部'
+    };
+
+    /* =========================================================================
+       3. 初始化與五大主分頁切換
+    ========================================================================= */
+    function initApp() {
+      renderMatrixExplorer();
+      renderRoadmap();
+      renderProfileSetup();
+      renderHcmcHotspots();
+      renderGuideFilters();
+      renderGuideChapters();
+      renderMythCards();
+      renderReelsSeries();
+      renderInterviewBrowser();
+      renderLegalChecklist();
+      recalcEmployerCost();
+      renderAiToolFilters();
+      renderAiToolsGrid();
+
+      switchMainTab('overview', false);
+      switchToolkitSubtab('checklist');
+    }
+
+    function switchMainTab(tabId, shouldScroll = true) {
+      appState.activeTab = tabId;
+
+      document.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.main-tab-btn').forEach((btn) => {
+        const active = btn.dataset.tab === tabId;
+        btn.className = active
+          ? 'main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 bg-ocean-800 text-white shadow-sm'
+          : 'main-tab-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:bg-slate-100 hover:text-ocean-900';
+      });
+
+      if (shouldScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    /* =========================================================================
+       4. 分頁一：4×3 矩陣探索器（支援單一儲存格與整列點擊）＆ 四階段藍圖
+    ========================================================================= */
+    function renderMatrixExplorer() {
+      const tbody = document.getElementById('matrix-table-body');
+      const sel = appState.matrixSelection;
+
+      tbody.innerHTML = SECTORS.map((sec) => {
+        const isRowActive = sel.sectorId === sec.id;
+        const renderCell = (grpKey, count, colorText) => {
+          const isCellSelected = sel.mode === 'cell' && sel.sectorId === sec.id && sel.groupId === grpKey;
+          return `
+            <td
+              onclick="selectMatrixCell('${sec.id}', '${grpKey}')"
+              class="py-3.5 px-2.5 text-center font-extrabold cursor-pointer transition-all select-none ${
+                isCellSelected
+                  ? 'bg-ocean-800 text-white ring-2 ring-inset ring-amber-400'
+                  : `${colorText} hover:bg-blue-100/70`
+              }"
+              title="點擊檢視【${sec.short} × ${GROUP_LABELS[grpKey]}】訪談聚焦"
+            >
+              ${count} 位
+            </td>
+          `;
+        };
+
+        return `
+          <tr class="transition-colors ${isRowActive ? 'bg-ocean-50/60' : 'bg-white hover:bg-slate-50'}">
+            <td onclick="selectMatrixRow('${sec.id}')" class="py-3.5 px-4 cursor-pointer group">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                  isRowActive ? 'bg-ocean-800 text-emerald-300' : 'bg-slate-100 text-slate-600 group-hover:bg-ocean-800 group-hover:text-white'
+                }">${sec.icon}</span>
+                <div>
+                  <p class="font-bold text-slate-900 group-hover:text-ocean-800">${sec.name}</p>
+                  <p class="text-[11px] text-slate-500">${sec.tag}</p>
+                </div>
+              </div>
+            </td>
+            ${renderCell('tw', sec.counts.tw, 'text-ocean-800')}
+            ${renderCell('vn', sec.counts.vn, 'text-safe-700')}
+            ${renderCell('mix', sec.counts.mix, 'text-amber-700')}
+            <td onclick="selectMatrixRow('${sec.id}')" class="py-3.5 px-3 text-center font-black cursor-pointer ${
+              sel.mode === 'sector' && isRowActive ? 'bg-ocean-900 text-emerald-300' : 'bg-slate-50 text-slate-900'
+            }">${sec.total} 位</td>
+          </tr>
+        `;
+      }).join('');
+
+      // 渲染右側解析面板
+      const activeSec = SECTORS.find((s) => s.id === sel.sectorId) || SECTORS[0];
+      const panel = document.getElementById('matrix-detail-panel');
+
+      if (sel.mode === 'cell') {
+        const grpName = GROUP_LABELS[sel.groupId];
+        const grpCount = activeSec.counts[sel.groupId];
+        const cellInfo = activeSec.cellDetails[sel.groupId];
+
+        panel.innerHTML = `
+          <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-200">
+            <div>
+              <span class="inline-block px-2 py-0.5 rounded bg-ocean-800 text-white text-[10px] font-extrabold mb-1">細分矩陣儲存格解析</span>
+              <h3 class="font-black text-base text-slate-900">${activeSec.short} × ${grpName}</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-blue-100 text-ocean-900 text-xs font-black shrink-0">${grpCount} 位樣本</span>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-extrabold text-ocean-800 mb-1">🎯 該細分族群訪談聚焦重點</h4>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${cellInfo.focus}</p>
+          </div>
+
+          <div class="rounded-xl bg-alert-50/80 border border-red-200 p-3.5">
+            <h4 class="text-xs font-extrabold text-alert-600 mb-1">📉 預期挖掘之「過往失敗停損案例」類型</h4>
+            <p class="text-xs text-slate-800 leading-relaxed">${cellInfo.failure}</p>
+          </div>
+
+          <div class="rounded-xl bg-white border border-slate-200 p-3.5 text-xs text-slate-600 leading-relaxed">
+            <strong class="text-safe-700 font-extrabold">🗣️ 語言篩選與雙母語備案：</strong>
+            受訪者優先篩選具備中文溝通能力之台青、留台校友與混血創業者；若遇中文不流利之關鍵對象，委請熟稔台越雙母語之在地友人翻譯（外商全英語溝通作為最終備案），且訪綱均提前寄發準備。
+          </div>
+        `;
+      } else {
+        panel.innerHTML = `
+          <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-200">
+            <div>
+              <span class="inline-block px-2 py-0.5 rounded bg-safe-600 text-white text-[10px] font-extrabold mb-1">全產業田調總覽</span>
+              <h3 class="font-black text-base text-slate-900">${activeSec.name}</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-safe-700 text-xs font-black shrink-0">合計 ${activeSec.total} 位</span>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-extrabold text-ocean-800 mb-1">🎯 產業整體調研主軸</h4>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${activeSec.overallFocus}</p>
+          </div>
+
+          <div class="rounded-xl bg-alert-50/80 border border-red-200 p-3.5">
+            <h4 class="text-xs font-extrabold text-alert-600 mb-1">📉 該產業常見「過往失敗停損案例」類型</h4>
+            <p class="text-xs text-slate-800 leading-relaxed">${activeSec.failureTypes}</p>
+          </div>
+
+          <div class="rounded-xl bg-white border border-slate-200 p-3.5 text-xs text-slate-600 leading-relaxed">
+            <strong class="text-safe-700 font-extrabold">🗣️ 語言篩選與雙母語備案：</strong>
+            聚焦具備中文溝通能力之受訪者（3 台青＋1 留台校友＋1 混血），必要時啟動台越雙母語友人翻譯與全英語備案。
+          </div>
+        `;
+      }
+    }
+
+    function selectMatrixCell(sectorId, groupId) {
+      appState.matrixSelection = { mode: 'cell', sectorId, groupId };
+      renderMatrixExplorer();
+    }
+
+    function selectMatrixRow(sectorId) {
+      appState.matrixSelection = { mode: 'sector', sectorId, groupId: null };
+      renderMatrixExplorer();
+    }
+
+    function renderRoadmap() {
+      document.getElementById('roadmap-cards').innerHTML = ROADMAP_STAGES.map((st, idx) => `
+        <div class="rounded-2xl p-5 border flex flex-col justify-between transition-all ${
+          st.current
+            ? 'bg-ocean-900 text-white border-ocean-900 shadow-md'
+            : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-white hover:border-blue-300'
+        }">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="text-2xl font-black ${st.current ? 'text-emerald-400' : 'text-ocean-800'}">${st.ver}</span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                st.current ? 'bg-emerald-400 text-slate-950' : 'bg-white border border-slate-200 text-slate-600'
+              }">${st.badge}</span>
+            </div>
+            <p class="text-[11px] font-bold ${st.current ? 'text-amber-300' : 'text-warn-600'} mb-1.5">${st.date}</p>
+            <h3 class="font-extrabold text-sm sm:text-base leading-snug mb-2 ${st.current ? 'text-white' : 'text-slate-900'}">${st.title}</h3>
+            <p class="text-xs leading-relaxed ${st.current ? 'text-slate-300' : 'text-slate-600'}">${st.desc}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t ${st.current ? 'border-slate-800' : 'border-slate-200'} flex items-center justify-between text-[11px] font-bold">
+            <span class="${st.current ? 'text-slate-400' : 'text-slate-400'}">迭代節點 0${idx + 1}</span>
+            <span class="${st.current ? 'text-emerald-300' : 'text-ocean-800'}">${idx === 3 ? '結合 5–10 萬廣告推播' : '零採購預算靜態部署'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* =========================================================================
+       5. 分頁二：3 分鐘 AI 避雷檢測（背景設定 -> 10 題測驗 -> 五軸雷達報告）
+    ========================================================================= */
+    function renderProfileSetup() {
+      // 1. 目標產業
+      document.getElementById('setup-industry-grid').innerHTML = SECTORS.map((sec) => {
+        const sel = appState.profile.sectorId === sec.id;
+        return `
+          <button type="button" onclick="setProfileField('sectorId', '${sec.id}')" class="text-left p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3 ${
+            sel ? 'border-ocean-800 bg-ocean-50/70 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+          }">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${sel ? 'bg-ocean-800 text-emerald-300' : 'bg-slate-100 text-slate-600'}">
+              ${sec.icon}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-sm text-slate-900">${sec.name}</p>
+              <p class="text-xs text-slate-500 mt-0.5">${sec.tag}</p>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      // 2. 資本架構（含借用越南人頭代持即時紅線警告）
+      document.getElementById('setup-entity-grid').innerHTML = CAPITAL_STRUCTURES.map((cap) => {
+        const sel = appState.profile.capitalId === cap.id;
+        const borderClass = sel
+          ? (cap.isNominee ? 'border-alert-600 bg-alert-50/70 shadow-sm' : 'border-ocean-800 bg-ocean-50/70 shadow-sm')
+          : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50';
+        return `
+          <button type="button" onclick="setProfileField('capitalId', '${cap.id}')" class="text-left p-4 rounded-2xl border-2 transition-all cursor-pointer ${borderClass}">
+            <div class="flex items-center justify-between gap-2">
+              <p class="font-bold text-sm ${cap.isNominee && sel ? 'text-alert-600' : 'text-slate-900'}">${cap.label}</p>
+              ${cap.isNominee ? `<span class="px-2 py-0.5 rounded bg-red-100 text-alert-600 text-[10px] font-extrabold shrink-0">極高危紅線</span>` : ''}
+            </div>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${cap.desc}</p>
+          </button>
+        `;
+      }).join('');
+
+      // 控制人頭代持紅色警告框顯示
+      const nomineeBox = document.getElementById('nominee-redline-box');
+      if (appState.profile.capitalId === 'nominee') {
+        nomineeBox.classList.remove('hidden');
+      } else {
+        nomineeBox.classList.add('hidden');
+      }
+
+      // 3. 團隊與語言準備度
+      document.getElementById('setup-lang-grid').innerHTML = LANG_READINESS_OPTS.map((opt) => {
+        const sel = appState.profile.langId === opt.id;
+        return `
+          <button type="button" onclick="setProfileField('langId', '${opt.id}')" class="text-left p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+            sel ? 'border-ocean-800 bg-ocean-50/70 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+          }">
+            <p class="font-bold text-sm text-slate-900">${opt.label}</p>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${opt.desc}</p>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setProfileField(field, value) {
+      appState.profile[field] = value;
+      document.getElementById('setup-error-msg').classList.add('hidden');
+      renderProfileSetup();
+    }
+
+    function showAssessmentSubView(viewId) {
+      ['assess-step-0', 'assess-step-1', 'assess-analyzing', 'assess-step-2'].forEach((id) => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(viewId).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startQuizFlow() {
+      const { sectorId, capitalId, langId } = appState.profile;
+      if (!sectorId || !capitalId || !langId) {
+        const errEl = document.getElementById('setup-error-msg');
+        errEl.classList.remove('hidden');
+        const box = document.getElementById('assess-step-0');
+        box.classList.remove('animate-shake');
+        void box.offsetWidth;
+        box.classList.add('animate-shake');
+        return;
+      }
+
+      appState.quizIndex = 0;
+      const sector = SECTORS.find((s) => s.id === sectorId);
+      document.getElementById('q-profile-badge').textContent = sector.short;
+      showAssessmentSubView('assess-step-1');
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const q = QUIZ_QUESTIONS[appState.quizIndex];
+      const total = QUIZ_QUESTIONS.length;
+      const saved = appState.quizAnswers[q.id];
+
+      document.getElementById('q-counter').textContent = `${appState.quizIndex + 1} / ${total}`;
+      document.getElementById('q-progress-bar').style.width = `${((appState.quizIndex + 1) / total) * 100}%`;
+      document.getElementById('q-dim-badge').textContent = `檢測維度：${q.dimName}`;
+      document.getElementById('q-tag').textContent = q.tag;
+      document.getElementById('q-title').textContent = q.title;
+      document.getElementById('q-context').textContent = q.context;
+
+      const card = document.getElementById('q-card');
+      card.classList.remove('animate-fade-in');
+      void card.offsetWidth;
+      card.classList.add('animate-fade-in');
+
+      document.getElementById('q-options').innerHTML = q.options.map((opt, idx) => {
+        const isSel = saved && saved.idx === idx;
+        return `
+          <button type="button" onclick="selectQuizOption('${q.id}', ${idx}, ${opt.score})" class="w-full text-left p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
+            isSel ? 'border-ocean-800 bg-ocean-50/70 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+          }">
+            <span class="w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
+              isSel ? 'bg-ocean-800 text-emerald-300' : 'bg-slate-100 text-slate-600'
+            }">${opt.code}</span>
+            <span class="text-sm sm:text-base leading-relaxed flex-1 ${isSel ? 'font-bold text-slate-900' : 'font-medium text-slate-700'}">${opt.text}</span>
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('q-btn-prev').innerHTML = appState.quizIndex === 0 ? '← 返回背景設定' : '← 上一題';
+
+      const btnNext = document.getElementById('q-btn-next');
+      const btnNextText = document.getElementById('q-btn-next-text');
+      btnNext.disabled = !saved;
+      btnNextText.textContent = appState.quizIndex === total - 1 ? '生成 AI 避雷診斷報告' : '下一題';
+    }
+
+    function selectQuizOption(qId, idx, score) {
+      clearTimeout(appState.autoNextTimer);
+      const alreadyAnswered = Boolean(appState.quizAnswers[qId]);
+      appState.quizAnswers[qId] = { idx, score };
+      renderQuizQuestion();
+
+      if (appState.quizIndex < QUIZ_QUESTIONS.length - 1 && !alreadyAnswered) {
+        appState.autoNextTimer = setTimeout(() => {
+          nextQuizQuestion();
+        }, 300);
+      }
+    }
+
+    function prevQuizQuestion() {
+      clearTimeout(appState.autoNextTimer);
+      if (appState.quizIndex === 0) {
+        showAssessmentSubView('assess-step-0');
+      } else {
+        appState.quizIndex -= 1;
+        renderQuizQuestion();
+      }
+    }
+
+    function nextQuizQuestion() {
+      clearTimeout(appState.autoNextTimer);
+      const q = QUIZ_QUESTIONS[appState.quizIndex];
+      if (!appState.quizAnswers[q.id]) return;
+
+      if (appState.quizIndex < QUIZ_QUESTIONS.length - 1) {
+        appState.quizIndex += 1;
+        renderQuizQuestion();
+      } else {
+        computeAndDisplayReport();
+      }
+    }
+
+    function computeAndDisplayReport() {
+      showAssessmentSubView('assess-analyzing');
+
+      setTimeout(() => {
+        const sector = SECTORS.find((s) => s.id === appState.profile.sectorId);
+        const capital = CAPITAL_STRUCTURES.find((c) => c.id === appState.profile.capitalId);
+        const lang = LANG_READINESS_OPTS.find((l) => l.id === appState.profile.langId);
+
+        // 計算五軸安全得分（0–100 分）
+        const dimResults = DIMENSIONS_5.map((d) => {
+          const qs = QUIZ_QUESTIONS.filter((q) => q.dim === d.key);
+          let avg = Math.round(qs.reduce((acc, q) => acc + (appState.quizAnswers[q.id]?.score || 0), 0) / qs.length);
+
+          if (d.key === 'legal' && capital.isNominee) {
+            avg = Math.max(8, avg - 28);
+          }
+          if (d.key === 'team') {
+            avg = Math.max(10, Math.min(100, avg + lang.scoreAdj));
+          }
+          return { ...d, score: avg };
+        });
+
+        const rawAvg = Math.round(dimResults.reduce((acc, d) => acc + d.score, 0) / dimResults.length);
+        const safetyIndex = Math.max(5, Math.min(100, rawAvg + Math.round((capital.scoreAdj + lang.scoreAdj) * 0.35)));
+
+        // 風險等級徽章判定（高風險紅燈 / 中度警戒黃燈 / 體質穩健綠燈）
+        let tier;
+        if (safetyIndex < 50 || capital.isNominee) {
+          tier = {
+            badge: '🔴 高風險紅燈',
+            title: '高危踩坑預警（強烈建議先排雷再出發）',
+            color: '#dc2626',
+            cardClass: 'bg-alert-50 border-red-200',
+            badgeClass: 'bg-alert-600 text-white'
+          };
+        } else if (safetyIndex < 75) {
+          tier = {
+            badge: '🟡 中度警戒黃燈',
+            title: '具初步雛形但低於 75 分安全基準線',
+            color: '#d97706',
+            cardClass: 'bg-warn-50 border-amber-200',
+            badgeClass: 'bg-warn-600 text-white'
+          };
+        } else {
+          tier = {
+            badge: '🟢 體質穩健綠燈',
+            title: '達到 75 分安全基準線・適合展開小步試點',
+            color: '#059669',
+            cardClass: 'bg-safe-50 border-emerald-200',
+            badgeClass: 'bg-safe-600 text-white'
+          };
+        }
+
+        // 取得分最低的兩個弱項
+        const weakestTwo = [...dimResults].sort((a, b) => a.score - b.score).slice(0, 2);
+
+        let summaryText = `針對你計畫切入的【${sector.short}】賽道，在「${capital.label}」與「${lang.label}」配置下，你的越南落地安全指數為 ${safetyIndex} 分（安全基準線 75 分）。目前最需優先補強的兩大弱項為「${weakestTwo[0].name}（${weakestTwo[0].score} 分）」與「${weakestTwo[1].name}（${weakestTwo[1].score} 分）」。`;
+        if (capital.isNominee) {
+          summaryText += ' ⚠️ 特別紅燈警告：你選擇了「借用越南人頭代持」，在越南法規下不受保障，系統已強制觸發高風險紅燈，請務必改採合法外資或雙語書面合資架構！';
+        }
+
+        const report = {
+          sector, capital, lang, dimResults, safetyIndex, tier, weakestTwo, summaryText
+        };
+        appState.lastReport = report;
+
+        showAssessmentSubView('assess-step-2');
+        renderDiagnosticDashboard(report);
+      }, 600);
+    }
+
+    function renderDiagnosticDashboard(report) {
+      document.getElementById('res-profile-tags').textContent =
+        `${report.sector.name} ｜ ${report.capital.label} ｜ ${report.lang.label}`;
+
+      // 圓環動畫
+      const arc = document.getElementById('res-gauge-arc');
+      const circumference = 465;
+      arc.style.stroke = report.tier.color;
+      arc.style.strokeDashoffset = circumference;
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          arc.style.strokeDashoffset = circumference - (report.safetyIndex / 100) * circumference;
+        }, 70);
+      });
+
+      animateCounter('res-safety-num', 0, report.safetyIndex, 850);
+
+      const diff = report.safetyIndex - 75;
+      const gapPill = document.getElementById('res-gap-pill');
+      if (diff >= 0) {
+        gapPill.className = 'mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-safe-50 text-safe-700';
+        gapPill.textContent = `高於安全基準 +${diff} 分`;
+      } else {
+        gapPill.className = 'mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-alert-50 text-alert-600';
+        gapPill.textContent = `低於安全基準 ${diff} 分`;
+      }
+
+      const tierCard = document.getElementById('res-tier-card');
+      const tierBadge = document.getElementById('res-tier-badge');
+      tierCard.className = `w-full mt-4 rounded-2xl p-4 border text-left ${report.tier.cardClass}`;
+      tierBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-extrabold ${report.tier.badgeClass}`;
+      tierBadge.textContent = report.tier.badge;
+      document.getElementById('res-tier-title').textContent = report.tier.title;
+      document.getElementById('res-custom-summary').textContent = report.summaryText;
+
+      // 繪製內嵌 SVG 五軸雷達圖
+      renderFiveAxisRadar(report.dimResults);
+
+      // 五維度得分小卡
+      document.getElementById('res-dim-cards').innerHTML = report.dimResults.map((d) => {
+        const gap = d.score - 75;
+        const badge = gap >= 0
+          ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-safe-50 text-safe-700">達標 +${gap}</span>`
+          : `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-alert-50 text-alert-600">缺口 ${gap}</span>`;
+        const barCol = d.score >= 75 ? 'bg-safe-600' : (d.score >= 50 ? 'bg-warn-500' : 'bg-alert-600');
+        return `
+          <div class="rounded-xl bg-slate-50 border border-slate-200 p-3">
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="text-xs font-extrabold text-slate-800">${d.name}</span>
+              ${badge}
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full ${barCol} rounded-full" style="width:${d.score}%"></div>
+              </div>
+              <span class="text-xs font-black text-slate-900">${d.score} 分</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 雙向視角剖析卡（針對得分最低的兩個弱項）
+      document.getElementById('res-dual-insights').innerHTML = report.weakestTwo.map((dim, idx) => `
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-lg bg-alert-600 text-white text-xs font-extrabold">弱項排雷 #${idx + 1}</span>
+              <h4 class="font-black text-base text-slate-900">${dim.name}</h4>
+            </div>
+            <span class="text-xs font-bold text-alert-600">你的得分 ${dim.score} 分（安全基準 75 分）</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div class="rounded-xl bg-white border border-blue-200 p-4">
+              <div class="text-xs font-extrabold text-ocean-800 mb-1.5">
+                <span class="px-2 py-0.5 rounded bg-ocean-50 text-ocean-800">在越台青前輩踩坑實錄</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${dim.twStory}</p>
+            </div>
+            <div class="rounded-xl bg-white border border-emerald-200 p-4">
+              <div class="text-xs font-extrabold text-safe-700 mb-1.5">
+                <span class="px-2 py-0.5 rounded bg-safe-50 text-safe-700">留台越南校友在地視角建議</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${dim.vnAdvice}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // 客製化避雷處方箋：一定要做的 3 件事 vs 絕對不要做的 3 件事
+      const doItems = [
+        `<strong>【${report.sector.short}賽道必做】</strong>${report.sector.doItem}`,
+        `<strong>【補強 ${report.weakestTwo[0].name}】</strong>${report.weakestTwo[0].doTip}`,
+        `<strong>【補強 ${report.weakestTwo[1].name}】</strong>${report.weakestTwo[1].doTip}`
+      ];
+      const dontItems = [
+        `<strong>【${report.sector.short}賽道禁區】</strong>${report.sector.dontItem}`,
+        `<strong>【避開 ${report.weakestTwo[0].name} 暗礁】</strong>${report.weakestTwo[0].dontTip}`,
+        `<strong>【避開 ${report.weakestTwo[1].name} 暗礁】</strong>${report.weakestTwo[1].dontTip}`
+      ];
+
+      document.getElementById('res-do-list').innerHTML = doItems.map((item, i) => `
+        <li class="flex items-start gap-2.5 bg-white rounded-xl p-3 border border-emerald-200/80">
+          <span class="font-black text-safe-700 shrink-0">0${i + 1}.</span>
+          <span>${item}</span>
+        </li>
+      `).join('');
+
+      document.getElementById('res-dont-list').innerHTML = dontItems.map((item, i) => `
+        <li class="flex items-start gap-2.5 bg-white rounded-xl p-3 border border-red-200/80">
+          <span class="font-black text-alert-600 shrink-0">0${i + 1}.</span>
+          <span>${item}</span>
+        </li>
+      `).join('');
+    }
+
+    function renderFiveAxisRadar(dimResults) {
+      const cx = 270;
+      const cy = 192;
+      const maxR = 112;
+      const angles = [-90, -18, 54, 126, 198].map((deg) => (deg * Math.PI) / 180);
+
+      const getPoint = (ratio, idx) => [
+        cx + Math.cos(angles[idx]) * maxR * ratio,
+        cy + Math.sin(angles[idx]) * maxR * ratio
+      ];
+
+      // 1. 同心五邊形網格 (25%, 50%, 75%, 100%)
+      const gridLayer = document.getElementById('radar-grid-layer');
+      let gridSvg = '';
+      [1, 0.75, 0.5, 0.25].forEach((r, idx) => {
+        const pts = angles.map((_, i) => getPoint(r, i).map((n) => n.toFixed(1)).join(',')).join(' ');
+        gridSvg += `<polygon points="${pts}" fill="${idx === 0 ? '#f8fafc' : 'none'}" stroke="#cbd5e1" stroke-width="1" />`;
+      });
+      angles.forEach((_, i) => {
+        const [x, y] = getPoint(1, i);
+        gridSvg += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#cbd5e1" stroke-dasharray="3 3" />`;
+      });
+      gridSvg += `<text x="${cx + 6}" y="${cy - maxR * 0.5 + 3}" fill="#64748b" font-size="10" font-weight="600">50</text>`;
+      gridSvg += `<text x="${cx + 6}" y="${cy - maxR * 0.75 + 3}" fill="#059669" font-size="10" font-weight="800">75</text>`;
+      gridSvg += `<text x="${cx + 6}" y="${cy - maxR + 3}" fill="#64748b" font-size="10" font-weight="600">100</text>`;
+      gridLayer.innerHTML = gridSvg;
+
+      // 2. 75 分安全基準線
+      const benchPts = angles.map((_, i) => getPoint(0.75, i).map((n) => n.toFixed(1)).join(',')).join(' ');
+      document.getElementById('radar-benchmark-poly').setAttribute('points', benchPts);
+
+      // 3. 使用者五軸多邊形與端點
+      const userPoly = document.getElementById('radar-user-poly');
+      const centerPts = angles.map(() => `${cx},${cy}`).join(' ');
+      userPoly.setAttribute('points', centerPts);
+
+      const userCoords = dimResults.map((d, i) => getPoint(d.score / 100, i));
+      const userPtsStr = userCoords.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+
+      document.getElementById('radar-dots-layer').innerHTML = userCoords.map((p) =>
+        `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5" fill="#1e3a8a" stroke="#ffffff" stroke-width="2" />`
+      ).join('');
+
+      setTimeout(() => {
+        userPoly.setAttribute('points', userPtsStr);
+      }, 90);
+
+      // 4. 外圍五軸繁中標籤
+      const labelConfigs = [
+        { x: cx, y: 34, anchor: 'middle' },
+        { x: cx + 134, y: 144, anchor: 'start' },
+        { x: cx + 84, y: 314, anchor: 'start' },
+        { x: cx - 84, y: 314, anchor: 'end' },
+        { x: cx - 134, y: 144, anchor: 'end' }
+      ];
+
+      document.getElementById('radar-labels-layer').innerHTML = dimResults.map((d, i) => {
+        const cfg = labelConfigs[i];
+        const valColor = d.score >= 75 ? '#059669' : (d.score >= 50 ? '#d97706' : '#dc2626');
+        return `
+          <g text-anchor="${cfg.anchor}">
+            <text x="${cfg.x}" y="${cfg.y}" fill="#0f172a" font-size="12" font-weight="700">${d.radarLines[0]}</text>
+            <text x="${cfg.x}" y="${cfg.y + 15}" fill="#0f172a" font-size="12" font-weight="700">${d.radarLines[1]}</text>
+            <text x="${cfg.x}" y="${cfg.y + 32}" fill="${valColor}" font-size="13" font-weight="900">${d.score} 分</text>
+          </g>
+        `;
+      }).join('');
+    }
+
+    function resetQuizFlow() {
+      clearTimeout(appState.autoNextTimer);
+      appState.quizAnswers = {};
+      appState.quizIndex = 0;
+      appState.lastReport = null;
+      showAssessmentSubView('assess-step-0');
+    }
+
+    function copyDiagnosticSummary() {
+      if (!appState.lastReport) return;
+      const r = appState.lastReport;
+      const lines = [
+        `【《打破倖存者偏差》越南創業落地體質與避雷檢測報告（V0.5）】`,
+        `目標產業：${r.sector.name}`,
+        `資本架構：${r.capital.label}｜語言準備：${r.lang.label}`,
+        `越南落地安全指數：${r.safetyIndex} / 100 分（${r.tier.badge}｜安全基準線 75 分）`,
+        ``,
+        `五軸得分表現：`,
+        ...r.dimResults.map((d) => `・${d.name}：${d.score} 分`),
+        ``,
+        `優先排雷弱項：${r.weakestTwo[0].name}、${r.weakestTwo[1].name}`,
+        `#教育部青年發展署 #青年百億海外圓夢基金計畫 #打破倖存者偏差`
+      ].join('\n');
+
+      copyTextFallback(lines, '已複製 AI 避雷診斷報告摘要至剪貼簿！');
+    }
+
+    /* =========================================================================
+       6. 分頁三：胡志明熱區情報圖 ＆ 五大篇章雙軌指南
+    ========================================================================= */
+    function renderHcmcHotspots() {
+      const keys = ['d1', 'd3', 'd7'];
+      document.getElementById('district-tab-buttons').innerHTML = keys.map((k) => {
+        const d = HCMC_DISTRICTS[k];
+        const active = appState.selectedHcmcDistrict === k;
+        return `
+          <button onclick="selectHcmcDistrict('${k}')" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            active ? 'bg-ocean-800 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }">${d.name}</button>
+        `;
+      }).join('');
+
+      keys.forEach((k) => {
+        const g = document.getElementById(`map-${k}`);
+        if (!g) return;
+        const active = appState.selectedHcmcDistrict === k;
+        const path = g.querySelector('path');
+        const texts = g.querySelectorAll('text');
+        if (active) {
+          path.setAttribute('fill', '#1e3a8a');
+          path.setAttribute('stroke', '#10b981');
+          texts[0].setAttribute('fill', '#ffffff');
+          texts[1].setAttribute('fill', '#6ee7b7');
+        } else {
+          path.setAttribute('fill', '#f1f5f9');
+          path.setAttribute('stroke', '#cbd5e1');
+          texts[0].setAttribute('fill', '#0f172a');
+          texts[1].setAttribute('fill', '#64748b');
+        }
+      });
+
+      const info = HCMC_DISTRICTS[appState.selectedHcmcDistrict];
+      document.getElementById('hcmc-district-detail').innerHTML = `
+        <div class="space-y-4">
+          <div class="pb-3 border-b border-slate-200">
+            <span class="inline-block px-2.5 py-0.5 rounded-md bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-extrabold mb-1">聚落情報解析</span>
+            <h3 class="text-xl font-black text-slate-900">${info.name}</h3>
+            <p class="text-xs sm:text-sm font-bold text-safe-700 mt-0.5">${info.subtitle}</p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+            <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+              <span class="text-slate-800">💰 租金與前期資金門檻指標</span>
+              <span class="text-warn-600 font-black">${info.rentLevel} / 100</span>
+            </div>
+            <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden mb-1.5">
+              <div class="h-full bg-gradient-to-r from-safe-600 via-warn-500 to-alert-600 rounded-full" style="width:${info.rentLevel}%"></div>
+            </div>
+            <p class="text-xs text-slate-600">${info.rentDesc}</p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+            <p class="text-xs font-extrabold text-slate-900 mb-1">👥 消費客群輪廓</p>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${info.audience}</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+              <p class="font-extrabold text-safe-700 mb-1.5">✅ 適合測試業態</p>
+              <ul class="space-y-1 text-slate-700">
+                ${info.bestFor.map((b) => `<li class="flex items-start gap-1.5"><span class="text-safe-600 font-bold">•</span><span>${b}</span></li>`).join('')}
+              </ul>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+              <p class="font-extrabold text-alert-600 mb-1.5">⚠️ 該區排雷重點</p>
+              <ul class="space-y-1 text-slate-700">
+                ${info.pitfalls.map((p) => `<li class="flex items-start gap-1.5"><span class="text-alert-600 font-bold">•</span><span>${p}</span></li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-xl bg-warn-50 border border-amber-200 p-3.5 text-xs text-amber-950 leading-relaxed">
+          <strong class="font-extrabold text-amber-900">📍 本計畫田調／沙龍據點：</strong>${info.salonNote}
+        </div>
+      `;
+    }
+
+    function selectHcmcDistrict(id) {
+      appState.selectedHcmcDistrict = id;
+      renderHcmcHotspots();
+    }
+
+    function renderGuideFilters() {
+      const indFilters = [
+        { id: 'all', label: '全部產業' },
+        { id: 'fb', label: '精緻餐飲' },
+        { id: 'creative', label: '文創空間' },
+        { id: 'ecommerce', label: '跨境電商' },
+        { id: 'ai', label: '生成式 AI' }
+      ];
+      const topicFilters = ['all', '市場驗證', '法規合規', '消費洞察', '跨文化管理', '心理韌性'];
+
+      document.getElementById('guide-industry-filters').innerHTML = indFilters.map((f) => {
+        const active = appState.guideIndustryFilter === f.id;
+        return `<button onclick="setGuideFilter('industry', '${f.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+          active ? 'bg-ocean-800 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+        }">${f.label}</button>`;
+      }).join('');
+
+      document.getElementById('guide-topic-filters').innerHTML = topicFilters.map((t) => {
+        const active = appState.guideTopicFilter === t;
+        const label = t === 'all' ? '全部痛點標籤' : t;
+        return `<button onclick="setGuideFilter('topic', '${t}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+          active ? 'bg-safe-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+        }">${label}</button>`;
+      }).join('');
+    }
+
+    function setGuideFilter(type, value) {
+      if (type === 'industry') appState.guideIndustryFilter = value;
+      if (type === 'topic') appState.guideTopicFilter = value;
+      appState.openGuideIndex = 0;
+      renderGuideFilters();
+      renderGuideChapters();
+    }
+
+    function renderGuideChapters() {
+      const filtered = GUIDE_CHAPTERS.filter((ch) => {
+        const matchInd = appState.guideIndustryFilter === 'all' || ch.industries.includes(appState.guideIndustryFilter);
+        const matchTopic = appState.guideTopicFilter === 'all' || ch.topics.includes(appState.guideTopicFilter);
+        return matchInd && matchTopic;
+      });
+
+      const container = document.getElementById('guide-chapters-list');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="rounded-2xl bg-slate-50 border border-slate-200 p-8 text-center text-sm text-slate-500">此篩選條件下暫無完全對應篇章，請切換「全部」檢視五大篇章。</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map((ch, idx) => {
+        const isOpen = appState.openGuideIndex === idx;
+        return `
+          <div class="rounded-2xl border transition-all ${isOpen ? 'border-ocean-800 bg-white shadow-sm' : 'border-slate-200 bg-slate-50/70 hover:bg-white'}">
+            <button type="button" onclick="toggleGuideChapter(${idx})" class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-md bg-ocean-900 text-emerald-300 text-xs font-extrabold">${ch.num}</span>
+                  <span class="text-[11px] font-bold text-slate-500">${ch.words}</span>
+                  ${ch.topics.map((t) => `<span class="px-2 py-0.5 rounded bg-slate-200/80 text-slate-700 text-[10px] font-bold">#${t}</span>`).join('')}
+                </div>
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900">${ch.title}</h3>
+              </div>
+              <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 text-slate-600 transition-transform ${isOpen ? 'rotate-180 bg-blue-100 text-ocean-800' : ''}">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </button>
+
+            ${isOpen ? `
+              <div class="px-4 sm:px-5 pb-5 pt-2 border-t border-slate-100 space-y-4 animate-fade-in">
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-2">${ch.summary}</p>
+                <!-- 現行成功模式 × 過往失敗停損案例雙軌對照卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  <div class="rounded-xl bg-safe-50/80 border border-emerald-200 p-4 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                    <p class="font-extrabold text-safe-700 mb-1">✅ 現行成功模式對照</p>
+                    <p>${ch.successCase.replace('【現行成功模式】', '')}</p>
+                  </div>
+                  <div class="rounded-xl bg-alert-50/80 border border-red-200 p-4 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                    <p class="font-extrabold text-alert-600 mb-1">⚠️ 過往失敗停損案例對照</p>
+                    <p>${ch.failureCase.replace('【過往失敗停損案例】', '')}</p>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGuideChapter(idx) {
+      appState.openGuideIndex = appState.openGuideIndex === idx ? -1 : idx;
+      renderGuideChapters();
+    }
+
+    /* =========================================================================
+       7. 分頁四：6 張互動翻轉卡、EP1–EP6 短影音 ＆ 14 題銳利訪綱
+    ========================================================================= */
+    function renderMythCards() {
+      document.getElementById('myth-cards-grid').innerHTML = MYTH_CARDS.map((card) => {
+        const revealed = Boolean(appState.flippedMyths[card.id]);
+        return `
+          <button type="button" onclick="toggleMythCard('${card.id}')" class="flip-card text-left rounded-2xl p-5 border-2 flex flex-col justify-between min-h-[225px] cursor-pointer ${
+            revealed
+              ? 'bg-ocean-900 text-white border-ocean-900 shadow-md'
+              : 'bg-slate-50 text-slate-900 border-slate-200 hover:border-ocean-800 hover:bg-white'
+          }">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${
+                  revealed ? 'bg-safe-500 text-slate-950' : 'bg-red-100 text-alert-600'
+                }">${revealed ? '💡 越南在地真相' : '❌ 台灣人以為'}</span>
+                <span class="text-[11px] font-bold ${revealed ? 'text-blue-200' : 'text-slate-400'}">${card.num}・${card.tag}</span>
+              </div>
+
+              ${revealed ? `
+                <p class="text-xs sm:text-sm text-slate-100 leading-relaxed font-medium animate-fade-in">${card.back.replace('【越南在地真相】', '')}</p>
+              ` : `
+                <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug mt-2">${card.front}</h3>
+              `}
+            </div>
+
+            <div class="mt-4 pt-3 border-t ${revealed ? 'border-slate-800 text-emerald-300' : 'border-slate-200 text-ocean-800'} flex items-center justify-between text-xs font-bold">
+              <span>${revealed ? '點擊翻回台灣創業者誤區' : '點擊翻轉揭曉越南在地真相'}</span>
+              <span>↻</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      const allRevealed = MYTH_CARDS.every((c) => appState.flippedMyths[c.id]);
+      document.getElementById('btn-toggle-all-myths').textContent = allRevealed ? '全部翻回正面誤區' : '一鍵翻轉全部真相';
+    }
+
+    function toggleMythCard(id) {
+      appState.flippedMyths[id] = !appState.flippedMyths[id];
+      renderMythCards();
+    }
+
+    function toggleAllMyths() {
+      const allRevealed = MYTH_CARDS.every((c) => appState.flippedMyths[c.id]);
+      MYTH_CARDS.forEach((c) => {
+        appState.flippedMyths[c.id] = !allRevealed;
+      });
+      renderMythCards();
+    }
+
+    function renderReelsSeries() {
+      document.getElementById('reels-grid').innerHTML = REELS_SERIES.map((r) => `
+        <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 rounded-md bg-ocean-800 text-white text-xs font-black">${r.ep}</span>
+              <span class="text-[11px] font-bold text-slate-500">${r.week}發布</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 leading-snug">${r.title}</h4>
+            <p class="text-[11px] font-semibold text-safe-700 mt-2">訪談切角：${r.angle}</p>
+          </div>
+          <p class="text-xs text-slate-600 mt-2 pt-2 border-t border-slate-200">${r.value}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderInterviewBrowser() {
+      const filters = [
+        { id: 'all', label: '全部顯示（前測＋14 題）' },
+        ...INTERVIEW_MODULES.map((m) => ({ id: m.id, label: m.label }))
+      ];
+
+      document.getElementById('interview-filter-btns').innerHTML = filters.map((f) => {
+        const active = appState.interviewFilter === f.id;
+        return `
+          <button onclick="setInterviewFilter('${f.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+            active ? 'bg-ocean-800 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }">${f.label}</button>
+        `;
+      }).join('');
+
+      const list = appState.interviewFilter === 'all'
+        ? INTERVIEW_MODULES
+        : INTERVIEW_MODULES.filter((m) => m.id === appState.interviewFilter);
+
+      document.getElementById('interview-modules-container').innerHTML = list.map((mod) => `
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5 space-y-3 animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-black text-base text-slate-900">${mod.title}</h3>
+            <span class="px-2.5 py-0.5 rounded-md bg-ocean-50 text-ocean-800 border border-blue-200 text-xs font-extrabold">${mod.label}</span>
+          </div>
+          <p class="text-xs font-bold text-amber-900 bg-warn-50 border border-amber-200 rounded-xl px-3.5 py-2">${mod.probing}</p>
+          <div class="space-y-2">
+            ${mod.items.map((item) => `
+              <div class="p-3.5 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">${item}</div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setInterviewFilter(id) {
+      appState.interviewFilter = id;
+      renderInterviewBrowser();
+    }
+
+    /* =========================================================================
+       8. 分頁五：互動工具附錄包（檢核表、雙幣別用人成本試算器、AI 工具清單）
+    ========================================================================= */
+    function switchToolkitSubtab(subtabId) {
+      appState.activeToolkitSubtab = subtabId;
+      document.querySelectorAll('.tk-panel').forEach((el) => el.classList.add('hidden'));
+      const target = document.getElementById(`subtab-${subtabId}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.tk-subtab-btn').forEach((btn) => {
+        const active = btn.dataset.subtab === subtabId;
+        btn.className = active
+          ? 'tk-subtab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer bg-ocean-800 text-white shadow-sm'
+          : 'tk-subtab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200';
+      });
+    }
+
+    // 工具 1：10 項法規避雷檢核表
+    function renderLegalChecklist() {
+      const allItems = LEGAL_CHECKLIST.flatMap((g) => g.items);
+      const checkedCount = allItems.filter((item) => appState.checkedLegalItems[item.id]).length;
+      const pct = Math.round((checkedCount / allItems.length) * 100);
+      const uncheckedRedLines = allItems.filter((item) => item.redLine && !appState.checkedLegalItems[item.id]).length;
+
+      document.getElementById('cl-progress-text').textContent = `${checkedCount} / ${allItems.length} (${pct}%)`;
+      document.getElementById('cl-progress-bar').style.width = `${pct}%`;
+
+      const alertEl = document.getElementById('cl-redline-alert');
+      if (uncheckedRedLines > 0) {
+        alertEl.className = 'md:col-span-5 rounded-2xl bg-alert-50 border border-red-200 p-4 text-xs sm:text-sm text-red-950 font-bold';
+        alertEl.innerHTML = `⚠️ 尚有 <span class="text-alert-600 font-black text-base">${uncheckedRedLines}</span> 項「高危法規紅線」未勾選確認，簽約或匯出資金前請務必逐項排雷！`;
+      } else {
+        alertEl.className = 'md:col-span-5 rounded-2xl bg-safe-50 border border-emerald-200 p-4 text-xs sm:text-sm text-safe-700 font-bold';
+        alertEl.innerHTML = `✅ 5 項高危法規紅線已全數確認！建議點擊右上方按鈕一鍵匯出檢核報告（.txt）留存。`;
+      }
+
+      document.getElementById('checklist-groups-container').innerHTML = LEGAL_CHECKLIST.map((grp) => `
+        <div class="space-y-2.5">
+          <h4 class="text-sm font-extrabold text-ocean-900 pb-1.5 border-b border-slate-200">${grp.group}</h4>
+          <div class="space-y-2">
+            ${grp.items.map((item) => {
+              const checked = Boolean(appState.checkedLegalItems[item.id]);
+              return `
+                <label class="flex items-start gap-3 p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                  checked ? 'bg-safe-50/70 border-emerald-300' : 'bg-slate-50/80 border-slate-200 hover:bg-white'
+                }">
+                  <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleLegalItem('${item.id}')" class="mt-1 w-4 h-4 rounded accent-emerald-700 cursor-pointer shrink-0" />
+                  <div class="flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center gap-1.5 mb-0.5">
+                      ${item.redLine
+                        ? `<span class="px-2 py-0.5 rounded bg-red-100 text-alert-600 text-[10px] font-extrabold">高危紅線</span>`
+                        : `<span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-bold">合規必備</span>`
+                      }
+                      <span class="text-xs sm:text-sm font-bold ${checked ? 'line-through text-slate-400' : 'text-slate-900'}">${item.text}</span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">${item.note}</p>
+                  </div>
+                </label>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleLegalItem(id) {
+      appState.checkedLegalItems[id] = !appState.checkedLegalItems[id];
+      renderLegalChecklist();
+    }
+
+    function resetChecklist() {
+      appState.checkedLegalItems = {};
+      renderLegalChecklist();
+      showToast('已重設 10 項法規避雷檢核表。');
+    }
+
+    function exportChecklistTxt() {
+      const allItems = LEGAL_CHECKLIST.flatMap((g) => g.items);
+      const checkedCount = allItems.filter((item) => appState.checkedLegalItems[item.id]).length;
+      const lines = [
+        '====================================================================',
+        '《打破倖存者偏差》台越公司設立與法規避雷檢核報告（V0.5）',
+        `檢核完成進度：${checkedCount} / ${allItems.length} 項（${Math.round((checkedCount / allItems.length) * 100)}%）`,
+        '====================================================================',
+        ''
+      ];
+
+      LEGAL_CHECKLIST.forEach((grp) => {
+        lines.push(`【${grp.group}】`);
+        grp.items.forEach((item) => {
+          const mark = appState.checkedLegalItems[item.id] ? '[✓]' : '[ ]';
+          const tag = item.redLine ? '（高危紅線）' : '';
+          lines.push(`${mark} ${tag}${item.text}`);
+          lines.push(`    排雷備註：${item.note}`);
+        });
+        lines.push('');
+      });
+
+      lines.push('資料來源：教育部青年發展署「青年百億海外圓夢基金計畫—築夢工場組（築夢 7）」');
+      lines.push('申請人：黃蘅軒｜100% 公益開源・非營利・零預算自主開發');
+
+      const content = lines.join('\n');
+
+      try {
+        const blob = new Blob(['\uFEFF' + content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '台越公司設立與法規避雷檢核報告.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('已一鍵匯出檢核報告（.txt）！');
+      } catch (e) {
+        copyTextFallback(content, '瀏覽器限制下載，已將檢核報告複製至剪貼簿！');
+      }
+    }
+
+    // 工具 2：越南雇主真實用人成本試算器（VND ⇄ TWD 雙向同步）
+    const VND_PER_TWD = 780;
+
+    function onSalaryInput(sourceCurrency) {
+      const vndInput = document.getElementById('input-salary-vnd');
+      const twdInput = document.getElementById('input-salary-twd');
+
+      if (sourceCurrency === 'vnd') {
+        const vndVal = Math.max(0, Number(vndInput.value) || 0);
+        twdInput.value = Math.round(vndVal / VND_PER_TWD);
+      } else {
+        const twdVal = Math.max(0, Number(twdInput.value) || 0);
+        vndInput.value = Math.round(twdVal * VND_PER_TWD);
+      }
+      recalcEmployerCost();
+    }
+
+    function setCalcSalaryVnd(vndAmount) {
+      document.getElementById('input-salary-vnd').value = vndAmount;
+      document.getElementById('input-salary-twd').value = Math.round(vndAmount / VND_PER_TWD);
+      recalcEmployerCost();
+    }
+
+    function recalcEmployerCost() {
+      const baseVnd = Math.max(0, Number(document.getElementById('input-salary-vnd').value) || 0);
+      const headcount = Number(document.getElementById('calc-headcount').value) || 1;
+
+      // 雇主法定強制保險 21.5% (社保 17.5% + 醫保 3% + 失業險 1%) + 工會費 2% = 23.5%
+      const statutoryAndUnionVnd = Math.round(baseVnd * 0.235);
+      // 第 13 個月年終獎金月均攤提 = 1/12 (8.333%)
+      const bonusAccrualVnd = Math.round(baseVnd / 12);
+      const singleTotalVnd = baseVnd + statutoryAndUnionVnd + bonusAccrualVnd;
+
+      const teamMonthVnd = singleTotalVnd * headcount;
+      const teamYearVnd = teamMonthVnd * 12;
+
+      const toTwd = (v) => Math.round(v / VND_PER_TWD);
+      const fmt = (n) => n.toLocaleString('zh-TW');
+
+      document.getElementById('calc-headcount-display').textContent = `${headcount} 人`;
+
+      document.getElementById('res-team-month-twd').textContent = `NT$ ${fmt(toTwd(teamMonthVnd))}`;
+      document.getElementById('res-team-month-vnd').textContent = `≈ ${fmt(teamMonthVnd)} VND / 月`;
+
+      document.getElementById('res-team-year-twd').textContent = `NT$ ${fmt(toTwd(teamYearVnd))}`;
+
+      document.getElementById('res-single-total-twd').textContent = `NT$ ${fmt(toTwd(singleTotalVnd))} / 人月`;
+      document.getElementById('res-single-base-twd').textContent = `NT$ ${fmt(toTwd(baseVnd))}`;
+      document.getElementById('res-single-base-vnd').textContent = `${fmt(baseVnd)} VND`;
+
+      document.getElementById('res-single-ins-twd').textContent = `NT$ ${fmt(toTwd(statutoryAndUnionVnd))}`;
+      document.getElementById('res-single-ins-vnd').textContent = `${fmt(statutoryAndUnionVnd)} VND`;
+
+      document.getElementById('res-single-bonus-twd').textContent = `NT$ ${fmt(toTwd(bonusAccrualVnd))}`;
+      document.getElementById('res-single-bonus-vnd').textContent = `${fmt(bonusAccrualVnd)} VND`;
+    }
+
+    // 工具 3：中小企業出海 AI 與數位工具導入清單
+    function renderAiToolFilters() {
+      const cats = ['全部', '智慧餐飲 POS／倉儲庫存', '跨國多語溝通與行銷生成', '團隊 KPI 績效追蹤'];
+      document.getElementById('aitool-category-filters').innerHTML = cats.map((c) => {
+        const active = appState.aiToolFilter === c;
+        return `
+          <button onclick="setAiToolFilter('${c}')" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+            active ? 'bg-ocean-800 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }">${c}</button>
+        `;
+      }).join('');
+    }
+
+    function setAiToolFilter(cat) {
+      appState.aiToolFilter = cat;
+      renderAiToolFilters();
+      renderAiToolsGrid();
+    }
+
+    function renderAiToolsGrid() {
+      const list = appState.aiToolFilter === '全部'
+        ? AI_TOOLS_LIST
+        : AI_TOOLS_LIST.filter((t) => t.cat === appState.aiToolFilter);
+
+      document.getElementById('aitools-grid').innerHTML = list.map((t) => `
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-blue-300 p-5 transition-all flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-ocean-50 text-ocean-800 border border-blue-200 text-[11px] font-extrabold">${t.cat}</span>
+              <span class="px-2 py-0.5 rounded-md bg-safe-50 text-safe-700 text-[11px] font-bold">${t.badge}</span>
+            </div>
+            <h4 class="text-base font-black text-slate-900">${t.name}</h4>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed"><strong>適用場景：</strong>${t.scene}</p>
+            <p class="text-xs text-slate-700 mt-2 leading-relaxed bg-white rounded-xl p-3 border border-slate-200">
+              <strong class="text-ocean-800">🇻🇳 越南在地適配性：</strong>${t.localFit}
+            </p>
+          </div>
+          <p class="text-xs font-semibold text-red-900 bg-alert-50 border border-red-200 rounded-xl px-3 py-2">
+            🚨 ${t.pitfall}
+          </p>
+        </div>
+      `).join('');
+    }
+
+    /* =========================================================================
+       9. 共用輔助函式（計數器動畫、安全剪貼簿複製、Toast 通知）
+    ========================================================================= */
+    function animateCounter(elId, start, end, duration) {
+      const el = document.getElementById(elId);
+      const startTime = performance.now();
+      function frame(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(start + (end - start) * eased);
+        if (progress < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function copyTextFallback(text, successMsg) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(ok ? successMsg : '未能自動複製，請手動選取內容。');
+      } catch (err) {
+        showToast('瀏覽器限制自動複製，請手動選取或截圖保存。');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2600);
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
